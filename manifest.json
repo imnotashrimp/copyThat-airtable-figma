@@ -1,0 +1,7 @@
+{
+  "name": "Airtable as CMS",
+  "id": "771515847445846462",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html"
+}
