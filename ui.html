@@ -1,16 +1,16 @@
-<h2>Rectangle Creator</h2>
-<p>Count: <input id="count" value="5"></p>
-<button id="create">Create</button>
-<button id="cancel">Cancel</button>
+<h2>Text changer</h2>
+<p>New text: <input id="new-text" value="5"></p>
+<button id="title">Change title</button>
+<button id="body">Change body</button>
 <script>
 
-document.getElementById('create').onclick = () => {
-  const textbox = document.getElementById('count');
+document.getElementById('title').onclick = () => {
+  const textbox = document.getElementById('new-text');
   const count = parseInt(textbox.value, 10);
-  parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
+  parent.postMessage({ pluginMessage: { type: 'change-text', count } }, '*')
 }
 
-document.getElementById('cancel').onclick = () => {
+document.getElementById('body').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
 }
 
