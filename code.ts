@@ -38,27 +38,25 @@ function isVariable(string) {
 */
 
 for (const node of figma.currentPage.selection) {
-  if ( node.type === 'TEXT' && (isVariable(node.characters) || isVariable(node.name)) ) {
 
-    autoRenameOff(node);
+  // If it's not a variable or a text, move along.
+  if (node.type !== 'TEXT') { break; }
+  if (!isVariable(node.characters) && !isVariable(node.name)) {
+    console.log(node.name + ' not a variable. Moving along.');
+    break;
+   }
 
-    //  TODO confirmation dialog
+  airtableTest();
 
-    if (isVariable(node.name) === true && node.name !== node.characters)
-      updateText(node, node.name);
+  node.autoRename = false;
 
-  }
+  //  TODO confirmation dialog
+
+  if (isVariable(node.name) === true && node.name !== node.characters)
+    updateText(node, node.name);
+
 };
 figma.closePlugin();
-
-function autoRenameOff(node) {
-  if (node.autoRename === true) {
-    console.log('Setting autoRename to false');
-    node.autoRename = false;
-  } else {
-    console.log('autoRename is already false')
-  }
-}
 
 async function updateText(node, text) {
   if (node.hasMissingFont) {
@@ -75,4 +73,25 @@ async function updateText(node, text) {
     node.characters = text;
 
   }
+}
+
+async function airtableTest() {
+  console.log('Starting airtableTest function')
+
+  // var request = new XMLHttpRequest();
+  // request.withCredentials = true;
+
+  // request.open("GET", "https://api.airtable.com/v0/appob2x3Fc4an3Uoq/logzio-ui?maxRecords=1&fields=key,theCopy&filterByFormula=AND%28key=%27alerts.triggerIfStep.stepTitle.text%27%29");
+  // request.setRequestHeader("Authorization", "Bearer keyqUqOMoRi6L9ctP");
+  // request.responseType = 'text'
+
+  // request.onload = () => {
+  //   // window.parent.postMessage({pluginMessage: request.response}, '*')
+  //   console.log('onload hit');
+  // };
+
+  // request.send();
+
+  // console.log(request.response);
+  console.log('airtableTest function done')
 }
