@@ -1,17 +1,50 @@
-<h2>Text changer</h2>
-<p>New text: <input id="new-text" value="5"></p>
-<button id="title">Change title</button>
-<button id="body">Change body</button>
-<script>
+<!-- content -->
+<div id="api-section">
+  <div class="inner-div"></div>
+  <h2>Set Airtable credentials</h2>
+  <p>API key: <input id="api-key"></p>
+  <p>Base ID: <input id="base-id"></p>
+  <p>Field to use as primary key: <input id="primary-key"></p>
+  <p>View name: <input id="view-name"></p>
+  <button id="save">Save</button> <br>
+  <button id="cancel">Cancel</button> <br>
+</div>
 
-document.getElementById('title').onclick = () => {
-  const textbox = document.getElementById('new-text');
-  const count = parseInt(textbox.value, 10);
-  parent.postMessage({ pluginMessage: { type: 'change-text', count } }, '*')
+<!-- js -->
+<script>
+var apiKey = document.getElementById('api-key');
+var baseId = document.getElementById('base-id');
+var primaryKey = document.getElementById('primary-key');
+var viewName = document.getElementById('view-name');
+
+onmessage = (event) => {
+  console.log("Received from plugin: ", event.data.pluginMessage)
+  const data = event.data.pluginMessage;
+  apiKey.value = getFieldValue(data.apiKey);
+  baseId.value = getFieldValue(data.baseId);
+  primaryKey.value = getFieldValue(data.primaryKey);
+  viewName = getFieldValue(data.viewName);
 }
 
-document.getElementById('body').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+const getFieldValue = (data) => {
+  if (!data) return '';
+  return data;
+}
+
+document.getElementById('save').onclick = () => {
+  const keys = {
+    apiKey: getFieldValue(apiKey.value),
+    baseId: getFieldValue(baseId.value),
+    primaryKey: getFieldValue(primaryKey.value),
+    viewName: getFieldValue(viewName.value)
+  };
+
+  console.log('Sending to plugin: ', keys);
+  parent.postMessage({ pluginMessage: { type: 'save-airtable-config', keys } }, '*');
+}
+
+document.getElementById('cancel').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
 }
 
 </script>
