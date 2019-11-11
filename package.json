@@ -1,0 +1,23 @@
+{
+  "name": "figma-plugin-airtable-cms",
+  "version": "0.0.1",
+  "description": "Airtable CMS for Figma",
+  "main": "code.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imnotashrimp/figma-plugin-airtable-cms.git"
+  },
+  "keywords": [
+    "figma-plugins",
+    "airtable"
+  ],
+  "author": "Stefan (Shalom)",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/imnotashrimp/figma-plugin-airtable-cms/issues"
+  },
+  "homepage": "https://github.com/imnotashrimp/figma-plugin-airtable-cms#readme"
+}
