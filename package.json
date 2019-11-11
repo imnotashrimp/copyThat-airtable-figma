@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/imnotashrimp/figma-plugin-airtable-cms/issues"
   },
-  "homepage": "https://github.com/imnotashrimp/figma-plugin-airtable-cms#readme"
+  "homepage": "https://github.com/imnotashrimp/figma-plugin-airtable-cms#readme",
+  "dependencies": {
+    "airtable": "^0.7.2"
+  }
 }
