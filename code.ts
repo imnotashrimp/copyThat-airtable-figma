@@ -1,5 +1,5 @@
-const getData = (key: string) => {
-  return figma.root.getPluginData(key) || undefined;
+const getData = (key) => {
+  return figma.root.getPluginData(key);
 }
 
 const setData = (key: string, value: string) => {
@@ -14,40 +14,37 @@ const airtableKeys = {
   viewName: 'viewName'
 };
 
+var airtableConfig = {
+  apiKey: getData(airtableKeys.apiKey),
+  baseId: getData(airtableKeys.baseId),
+  primaryKey: getData(airtableKeys.primaryKey),
+  viewName: getData(airtableKeys.viewName)
+}
 
-var airtable = {
-  config: {
-    apiKey: getData(airtableKeys.apiKey),
-    baseId: getData(airtableKeys.baseId),
-    primaryKey: getData(airtableKeys.primaryKey),
-    viewName: getData(airtableKeys.viewName)
+var setAirtableConfig = {
+  apiKey: (apiKey: string) => {
+    setData(airtableKeys.apiKey, apiKey);
+    airtableConfig.apiKey = getData(airtableKeys.apiKey);
   },
 
-  set: {
-    setApiKey: (apiKey: string) => {
-      setData(airtableKeys.apiKey, apiKey);
-      airtable.config.apiKey = getData(airtableKeys.apiKey);
-    },
+  baseId: (baseId: string) => {
+    setData(airtableKeys.baseId, baseId);
+    airtableConfig.baseId = getData(airtableKeys.baseId);
+  },
 
-    setBaseId: (baseId: string) => {
-      setData(airtableKeys.baseId, baseId);
-      airtable.config.apiKey = getData(airtableKeys.baseId);
-    },
+  primaryKey: (primaryKey: string) => {
+    setData(airtableKeys.primaryKey, primaryKey);
+    airtableConfig.primaryKey = getData(airtableKeys.primaryKey);
+  },
 
-    setPrimaryKey: (primaryKey: string) => {
-      setData(airtableKeys.primaryKey, primaryKey);
-      airtable.config.apiKey = getData(airtableKeys.primaryKey);
-    },
-
-    setViewName: (viewName: string) => {
-      setData(airtableKeys.viewName, viewName);
-      airtable.config.apiKey = getData(airtableKeys.viewName);
-    }
+  viewName: (viewName: string) => {
+    setData(airtableKeys.viewName, viewName);
+    airtableConfig.viewName = getData(airtableKeys.viewName);
   }
 }
 
 figma.showUI(__html__);
-figma.ui.postMessage(airtable.config)
+figma.ui.postMessage(airtableConfig)
 
 const variablePattern = /^\{{2}.+\}{2}$/m;
 function isVariable(testString: string) {
@@ -60,7 +57,12 @@ function isVariable(testString: string) {
 // posted message.
 figma.ui.onmessage = async (msg) => {
   if (msg.type === 'save-airtable-config') {
-    console.log('Message received from Figma UI: ', msg.keys)
+    const keys = msg.keys;
+    setAirtableConfig.apiKey(keys.apiKey);
+    setAirtableConfig.baseId(keys.baseId);
+    setAirtableConfig.primaryKey(keys.primaryKey);
+    setAirtableConfig.viewName(keys.viewName);
+    console.log('Saved new airtable config: ', airtableConfig);
   }
 
   figma.closePlugin();

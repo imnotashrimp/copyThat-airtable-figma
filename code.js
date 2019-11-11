@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const getData = (key) => {
-    return figma.root.getPluginData(key) || undefined;
+    return figma.root.getPluginData(key);
 };
 const setData = (key, value) => {
     figma.root.setPluginData(key, value);
@@ -20,34 +20,32 @@ const airtableKeys = {
     primaryKey: 'primaryKey',
     viewName: 'viewName'
 };
-var airtable = {
-    config: {
-        apiKey: getData(airtableKeys.apiKey),
-        baseId: getData(airtableKeys.baseId),
-        primaryKey: getData(airtableKeys.primaryKey),
-        viewName: getData(airtableKeys.viewName)
+var airtableConfig = {
+    apiKey: getData(airtableKeys.apiKey),
+    baseId: getData(airtableKeys.baseId),
+    primaryKey: getData(airtableKeys.primaryKey),
+    viewName: getData(airtableKeys.viewName)
+};
+var setAirtableConfig = {
+    apiKey: (apiKey) => {
+        setData(airtableKeys.apiKey, apiKey);
+        airtableConfig.apiKey = getData(airtableKeys.apiKey);
     },
-    set: {
-        setApiKey: (apiKey) => {
-            setData(airtableKeys.apiKey, apiKey);
-            airtable.config.apiKey = getData(airtableKeys.apiKey);
-        },
-        setBaseId: (baseId) => {
-            setData(airtableKeys.baseId, baseId);
-            airtable.config.apiKey = getData(airtableKeys.baseId);
-        },
-        setPrimaryKey: (primaryKey) => {
-            setData(airtableKeys.primaryKey, primaryKey);
-            airtable.config.apiKey = getData(airtableKeys.primaryKey);
-        },
-        setViewName: (viewName) => {
-            setData(airtableKeys.viewName, viewName);
-            airtable.config.apiKey = getData(airtableKeys.viewName);
-        }
+    baseId: (baseId) => {
+        setData(airtableKeys.baseId, baseId);
+        airtableConfig.baseId = getData(airtableKeys.baseId);
+    },
+    primaryKey: (primaryKey) => {
+        setData(airtableKeys.primaryKey, primaryKey);
+        airtableConfig.primaryKey = getData(airtableKeys.primaryKey);
+    },
+    viewName: (viewName) => {
+        setData(airtableKeys.viewName, viewName);
+        airtableConfig.viewName = getData(airtableKeys.viewName);
     }
 };
 figma.showUI(__html__);
-figma.ui.postMessage(airtable.config);
+figma.ui.postMessage(airtableConfig);
 const variablePattern = /^\{{2}.+\}{2}$/m;
 function isVariable(testString) {
     // Test if input string is a variable
@@ -58,7 +56,12 @@ function isVariable(testString) {
 // posted message.
 figma.ui.onmessage = (msg) => __awaiter(this, void 0, void 0, function* () {
     if (msg.type === 'save-airtable-config') {
-        console.log('Message received from Figma UI: ', msg.keys);
+        const keys = msg.keys;
+        setAirtableConfig.apiKey(keys.apiKey);
+        setAirtableConfig.baseId(keys.baseId);
+        setAirtableConfig.primaryKey(keys.primaryKey);
+        setAirtableConfig.viewName(keys.viewName);
+        console.log('Saved new airtable config: ', airtableConfig);
     }
     figma.closePlugin();
 });
