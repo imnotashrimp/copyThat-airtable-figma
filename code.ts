@@ -1,4 +1,4 @@
-const getData = (key) => {
+const getData = (key: string) => {
   return figma.root.getPluginData(key);
 }
 
