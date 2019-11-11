@@ -45,11 +45,12 @@ var setAirtableConfig = {
 
 if (figma.command === 'config') {
   figma.showUI(__html__);
-  figma.ui.postMessage(airtableConfig)
+  figma.ui.postMessage( { type: 'config', airtableConfig } );
 }
 
 if (figma.command === 'sync' ) {
-  
+  figma.showUI(__html__, { visible: false });
+  figma.ui.postMessage({ type: 'sync', airtableConfig });
 }
 
 const variablePattern = /^\{{2}.+\}{2}$/m;
