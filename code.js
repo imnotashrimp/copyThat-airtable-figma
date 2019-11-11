@@ -44,8 +44,12 @@ var setAirtableConfig = {
         airtableConfig.viewName = getData(airtableKeys.viewName);
     }
 };
-figma.showUI(__html__);
-figma.ui.postMessage(airtableConfig);
+if (figma.command === 'config') {
+    figma.showUI(__html__);
+    figma.ui.postMessage(airtableConfig);
+}
+if (figma.command === 'sync') {
+}
 const variablePattern = /^\{{2}.+\}{2}$/m;
 function isVariable(testString) {
     // Test if input string is a variable
