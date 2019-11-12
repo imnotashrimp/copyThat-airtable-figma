@@ -1,3 +1,5 @@
+var Airtable = require('airtable');
+
 var apiKey = document.getElementById('api-key');
 var baseId = document.getElementById('base-id');
 var primaryKey = document.getElementById('primary-key');
@@ -26,8 +28,8 @@ onmessage = (event) => {
     console.log('sync called');
     const data = msg.airtableConfig;
 
-    var Airtable = require('airtable');
     var base = new Airtable({apiKey: data.apiKey}).base(baseId);
+    
   }
 
 }

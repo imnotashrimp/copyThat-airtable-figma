@@ -27,7 +27,13 @@ module.exports = (env, argv) => ({
   },
 
   // Webpack tries these extensions for you if you omit the extension like "import './file'"
-  resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    modules: ['node_modules'],
+    alias: {
+      'airtable': path.join(__dirname, './node_modules/airtable/build/airtable.browser.js')
+    }
+  },
 
   output: {
     filename: '[name].js',
