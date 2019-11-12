@@ -2,8 +2,8 @@
   "name": "Airtable CMS for Figma",
   "id": "771515847445846462",
   "api": "1.0.0",
-  "main": "code.js",
-  "ui": "ui.html",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
   "menu": [
     {"name": "Sync strings with airtable", "command": "sync"},
     {"name": "Edit Airtable API config", "command": "config"}
