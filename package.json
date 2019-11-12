@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/imnotashrimp/figma-plugin-airtable-cms#readme",
   "dependencies": {
+    "@types/node": "^12.12.7",
     "airtable": "^0.7.2"
   },
   "devDependencies": {
