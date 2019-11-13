@@ -70,6 +70,8 @@ function isVariable(testString: string) {
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 figma.ui.onmessage = async (msg) => {
+  // console.log(msg) // for debugging. comment out this line.
+
   if (msg.type === 'save-airtable-config') {
     const keys = msg.keys;
     setAirtableConfig.apiKey(keys.apiKey);
@@ -78,6 +80,12 @@ figma.ui.onmessage = async (msg) => {
     setAirtableConfig.primaryKey(keys.primaryKey);
     setAirtableConfig.viewName(keys.viewName);
     console.log('Saved new airtable config: ', airtableConfig);
+  }
+
+  if (msg.type = 'sync-airtable-strings') {
+    // console.log('sync msg received'); // for debugging
+
+    console.log(msg.response);
   }
 
   figma.closePlugin();

@@ -1,5 +1,3 @@
-var Airtable = require('airtable');
-
 var apiKey = document.getElementById('api-key');
 var baseId = document.getElementById('base-id');
 var tableName = document.getElementById('table-name')
@@ -28,12 +26,45 @@ onmessage = (event) => {
 
   if (type === 'sync') {
     console.log('sync called');
-    const data = msg.airtableConfig;
+    const airtableConfig = msg.airtableConfig;
 
-    var base = new Airtable({apiKey: data.apiKey}).base(baseId);
-    
+    const getAirtableStrings = async (airtableConfig) => {
+      var request = new XMLHttpRequest()
+      // This link has random lorem ipsum text
+      const apiKey = airtableConfig.apiKey;
+      const baseId = airtableConfig.baseId;
+      const tableName = airtableConfig.tableName;
+      const primaryKey = airtableConfig.primaryKey;
+      const viewName = airtableConfig.viewName;
+
+      const endpointUrl =
+        'https://api.airtable.com/v0/'
+        + baseId
+        + '/'
+        + tableName
+        + '?api_key='
+        + apiKey
+        + '&view='
+        + viewName
+        ;
+
+      request.open('GET', endpointUrl);
+
+      request.responseType = 'text'
+      request.onload = () => {
+        const msg = {
+          type: 'sync-airtable-strings',
+          response: request.response
+        }
+        window.parent.postMessage({pluginMessage: msg}, '*')
+      };
+      request.send();
+
+    }
+
+    getAirtableStrings(airtableConfig);
+
   }
-
 }
 
 document.getElementById('save').onclick = () => {
