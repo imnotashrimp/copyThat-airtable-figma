@@ -30,9 +30,6 @@ module.exports = (env, argv) => ({
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js'],
     modules: ['node_modules'],
-    alias: {
-      'airtable': path.join(__dirname, './node_modules/airtable/build/airtable.browser.js')
-    }
   },
 
   output: {
