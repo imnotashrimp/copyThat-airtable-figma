@@ -10,6 +10,7 @@ const setData = (key: string, value: string) => {
 const airtableKeys = {
   apiKey: 'apiKey',
   baseId: 'baseId',
+  tableName: 'tableName',
   primaryKey: 'primaryKey',
   viewName: 'viewName'
 };
@@ -17,6 +18,7 @@ const airtableKeys = {
 var airtableConfig = {
   apiKey: getData(airtableKeys.apiKey),
   baseId: getData(airtableKeys.baseId),
+  tableName: getData(airtableKeys.tableName),
   primaryKey: getData(airtableKeys.primaryKey),
   viewName: getData(airtableKeys.viewName)
 }
@@ -30,6 +32,11 @@ var setAirtableConfig = {
   baseId: (baseId: string) => {
     setData(airtableKeys.baseId, baseId);
     airtableConfig.baseId = getData(airtableKeys.baseId);
+  },
+
+  tableName: (tableName: string) => {
+    setData(airtableKeys.tableName, tableName);
+    airtableConfig.tableName = getData(airtableKeys.tableName);
   },
 
   primaryKey: (primaryKey: string) => {
@@ -67,6 +74,7 @@ figma.ui.onmessage = async (msg) => {
     const keys = msg.keys;
     setAirtableConfig.apiKey(keys.apiKey);
     setAirtableConfig.baseId(keys.baseId);
+    setAirtableConfig.tableName(keys.tableName);
     setAirtableConfig.primaryKey(keys.primaryKey);
     setAirtableConfig.viewName(keys.viewName);
     console.log('Saved new airtable config: ', airtableConfig);

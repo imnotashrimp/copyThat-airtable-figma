@@ -2,6 +2,7 @@ var Airtable = require('airtable');
 
 var apiKey = document.getElementById('api-key');
 var baseId = document.getElementById('base-id');
+var tableName = document.getElementById('table-name')
 var primaryKey = document.getElementById('primary-key');
 var viewName = document.getElementById('view-name');
 
@@ -20,6 +21,7 @@ onmessage = (event) => {
 
     apiKey['value'] = getFieldValue(data.apiKey);
     baseId['value'] = getFieldValue(data.baseId);
+    tableName['value'] = getFieldValue(data.tableName);
     primaryKey['value'] = getFieldValue(data.primaryKey);
     viewName['value'] = getFieldValue(data.viewName);
   }
@@ -38,6 +40,7 @@ document.getElementById('save').onclick = () => {
   const keys = {
     apiKey: getFieldValue(apiKey['value']),
     baseId: getFieldValue(baseId['value']),
+    tableName: getFieldValue(tableName['value']),
     primaryKey: getFieldValue(primaryKey['value']),
     viewName: getFieldValue(viewName['value'])
   };
