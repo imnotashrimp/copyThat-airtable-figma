@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 const getData = (key: string) => {
   return figma.root.getPluginData(key);
 }
@@ -11,42 +13,42 @@ const airtableKeys = {
   apiKey: 'apiKey',
   baseId: 'baseId',
   tableName: 'tableName',
-  primaryKey: 'primaryKey',
-  viewName: 'viewName'
+  primaryKeyField: 'primaryKeyField',
+  theCopyField: 'theCopyField'
 };
 
 var airtableConfig = {
   apiKey: getData(airtableKeys.apiKey),
   baseId: getData(airtableKeys.baseId),
   tableName: getData(airtableKeys.tableName),
-  primaryKey: getData(airtableKeys.primaryKey),
-  viewName: getData(airtableKeys.viewName)
+  primaryKeyField: getData(airtableKeys.primaryKeyField),
+  theCopyField: getData(airtableKeys.theCopyField)
 }
 
 var setAirtableConfig = {
-  apiKey: (apiKey: string) => {
-    setData(airtableKeys.apiKey, apiKey);
+  apiKey: (val: string) => {
+    setData(airtableKeys.apiKey, val);
     airtableConfig.apiKey = getData(airtableKeys.apiKey);
   },
 
-  baseId: (baseId: string) => {
-    setData(airtableKeys.baseId, baseId);
+  baseId: (val: string) => {
+    setData(airtableKeys.baseId, val);
     airtableConfig.baseId = getData(airtableKeys.baseId);
   },
 
-  tableName: (tableName: string) => {
-    setData(airtableKeys.tableName, tableName);
+  tableName: (val: string) => {
+    setData(airtableKeys.tableName, val);
     airtableConfig.tableName = getData(airtableKeys.tableName);
   },
 
-  primaryKey: (primaryKey: string) => {
-    setData(airtableKeys.primaryKey, primaryKey);
-    airtableConfig.primaryKey = getData(airtableKeys.primaryKey);
+  primaryKeyField: (val: string) => {
+    setData(airtableKeys.primaryKeyField, val);
+    airtableConfig.primaryKeyField = getData(airtableKeys.primaryKeyField);
   },
 
-  viewName: (viewName: string) => {
-    setData(airtableKeys.viewName, viewName);
-    airtableConfig.viewName = getData(airtableKeys.viewName);
+  theCopyField: (val: string) => {
+    setData(airtableKeys.theCopyField, val);
+    airtableConfig.theCopyField = getData(airtableKeys.theCopyField);
   }
 }
 
@@ -77,15 +79,14 @@ figma.ui.onmessage = async (msg) => {
     setAirtableConfig.apiKey(keys.apiKey);
     setAirtableConfig.baseId(keys.baseId);
     setAirtableConfig.tableName(keys.tableName);
-    setAirtableConfig.primaryKey(keys.primaryKey);
-    setAirtableConfig.viewName(keys.viewName);
+    setAirtableConfig.primaryKeyField(keys.primaryKeyField);
+    setAirtableConfig.theCopyField(keys.theCopyField);
     console.log('Saved new airtable config: ', airtableConfig);
   }
 
   if (msg.type = 'sync-airtable-strings') {
     // console.log('sync msg received'); // for debugging
-
-    console.log(msg.response);
+    console.log(msg.response); // for debugging
   }
 
   figma.closePlugin();

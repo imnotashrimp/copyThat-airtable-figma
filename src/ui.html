@@ -1,12 +1,17 @@
 <!-- content -->
 <div id="api-section">
   <div class="inner-div"></div>
-  <h2>Set Airtable credentials</h2>
+  <h2>Set Airtable configuration</h2>
+  <h3>Credentials</h3>
   <p>API key: <input id="api-key"></p>
   <p>Base ID: <input id="base-id"></p>
   <p>Table: <input id="table-name"></p>
-  <p>Field to use as primary key: <input id="primary-key"></p>
-  <p>View name: <input id="view-name"></p>
+  <hr>
+  <h3>Fields</h3>
+  <p>Field with the unique primary key:<br>
+    <input id="primary-key-field"></p>
+  <p>Field that contains the copy:<br>
+    <input id="the-copy-field"></p>
   <button id="save">Save</button> <br>
   <button id="cancel">Cancel</button> <br>
 </div>

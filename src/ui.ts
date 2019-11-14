@@ -1,8 +1,8 @@
 var apiKey = document.getElementById('api-key');
 var baseId = document.getElementById('base-id');
 var tableName = document.getElementById('table-name')
-var primaryKey = document.getElementById('primary-key');
-var viewName = document.getElementById('view-name');
+var primaryKeyField = document.getElementById('primary-key-field');
+var theCopyField = document.getElementById('the-copy-field');
 
 const getFieldValue = (data: string) => {
   if (!data) return '';
@@ -20,8 +20,8 @@ onmessage = (event) => {
     apiKey['value'] = getFieldValue(data.apiKey);
     baseId['value'] = getFieldValue(data.baseId);
     tableName['value'] = getFieldValue(data.tableName);
-    primaryKey['value'] = getFieldValue(data.primaryKey);
-    viewName['value'] = getFieldValue(data.viewName);
+    primaryKeyField['value'] = getFieldValue(data.primaryKeyField);
+    theCopyField['value'] = getFieldValue(data.theCopyField);
   }
 
   if (type === 'sync') {
@@ -30,12 +30,11 @@ onmessage = (event) => {
 
     const getAirtableStrings = async (airtableConfig) => {
       var request = new XMLHttpRequest()
-      // This link has random lorem ipsum text
       const apiKey = airtableConfig.apiKey;
       const baseId = airtableConfig.baseId;
       const tableName = airtableConfig.tableName;
-      const primaryKey = airtableConfig.primaryKey;
-      const viewName = airtableConfig.viewName;
+      const primaryKeyField = airtableConfig.primaryKeyField;
+      const theCopyField = airtableConfig.theCopyField;
 
       const endpointUrl =
         'https://api.airtable.com/v0/'
@@ -44,8 +43,10 @@ onmessage = (event) => {
         + tableName
         + '?api_key='
         + apiKey
-        + '&view='
-        + viewName
+        + '&fields='
+        + primaryKeyField
+        + '&fields='
+        + theCopyField
         ;
 
       request.open('GET', endpointUrl);
@@ -72,8 +73,8 @@ document.getElementById('save').onclick = () => {
     apiKey: getFieldValue(apiKey['value']),
     baseId: getFieldValue(baseId['value']),
     tableName: getFieldValue(tableName['value']),
-    primaryKey: getFieldValue(primaryKey['value']),
-    viewName: getFieldValue(viewName['value'])
+    primaryKeyField: getFieldValue(primaryKeyField['value']),
+    theCopyField: getFieldValue(theCopyField['value'])
   };
 
   console.log('Sending to plugin: ', keys);
