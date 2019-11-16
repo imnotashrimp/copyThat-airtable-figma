@@ -62,10 +62,15 @@ if (figma.command === 'sync' ) {
   figma.ui.postMessage({ type: 'sync', airtableConfig });
 }
 
-const variablePattern = /^\{{2}.+\}{2}$/m;
-function isVariable(testString: string) {
+const variablePattern = /^\{{2}(.+)\}{2}$/m;
+
+const isVariable = (testString: string) => {
   // Test if input string is a variable
   return variablePattern.test(testString);
+}
+
+const getVariableName = (testString: string) => {
+  return testString.replace(variablePattern, '$1');
 }
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
@@ -85,10 +90,43 @@ figma.ui.onmessage = async (msg) => {
   }
 
   if (msg.type = 'sync-airtable-strings') {
-    console.log('Plugin received from UI: ', msg.strings); // debug
+    // console.log('Plugin received from UI: ', msg.strings); // debug
+    replaceText(msg.strings);
   }
 
-  // figma.closePlugin();
+  figma.closePlugin();
+}
+
+function replaceText(airtableData: object) {
+  console.log(airtableData);
+  const nodes = figma.root.findAll(node => node.type === "TEXT");
+
+  nodes.forEach(async (node: TextNode) => {
+    if (!isVariable(node.name)) return;
+
+    // console.log(node.name + 'is a variable. Replacing text.')
+    node.autoRename = false;
+
+    if (node.hasMissingFont) {
+
+      // TODO handle missing fonts
+      console.log('There are missing fonts. Not updating ' + node.name + '.')
+      return;
+
+    } else {
+
+      // Figma requires this bit when replacing text
+      await figma.loadFontAsync(node.fontName as FontName);
+
+      // Replace the text in the node
+      // console.log(airtableData[getVariableName(node.name)]); // debug
+
+      var str = airtableData[getVariableName(node.name)] || '!! NOT IN DB'
+      node.characters = str;
+
+    }
+
+  });
 }
 
 // function changeTextToTag () {
@@ -121,7 +159,7 @@ figma.ui.onmessage = async (msg) => {
 //   } else {
 
 //     // Figma requires this bit when replacing text
-//     await figma.loadFontAsync(node.fontName);
+    // await figma.loadFontAsync(node.fontName);
 
 //     // Replace the text in the node
 //     node.characters = text;
