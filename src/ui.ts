@@ -1,3 +1,5 @@
+import { prototype } from "events";
+
 var apiKey = document.getElementById('api-key');
 var baseId = document.getElementById('base-id');
 var tableName = document.getElementById('table-name')
@@ -25,66 +27,88 @@ onmessage = (event) => {
   }
 
   if (type === 'sync') {
-    console.log('sync called');
-    const airtableConfig = msg.airtableConfig;
+    const getAllStrings = async () => {
+      console.log('sync called');
+      const airtableConfig = msg.airtableConfig;
+      var allStringsArr = [];
 
-    var allStrings = {};
-    const addStrings = (records) => {
-      // Parses Airtable response fields, generates new object, and appends to
-      // allStrings array
-      records.forEach((record) => {
-        var key = record.fields[primaryKeyField];
-        var value = record.fields[theCopyField];
+      const addStrings = (records) => {
+        // Parses Airtable response fields, generates new object, and appends to
+        // allStrings array
+        records.forEach((record) => {
 
-        // Update allStrings object, to be sent to the plugin
-        allStrings = Object.assign(allStrings, {[key]: value});
-      })
-    }
+          var key = record.fields[primaryKeyField];
+          var value = record.fields[theCopyField] || '!! UNDEFINED';
 
-    const apiKey = airtableConfig.apiKey;
-    const baseId = airtableConfig.baseId;
-    const tableName = airtableConfig.tableName;
-    const primaryKeyField = airtableConfig.primaryKeyField;
-    const theCopyField = airtableConfig.theCopyField;
-    const apiBaseUrl = 'https://api.airtable.com/v0/'
-      + baseId
-      + '/'
-      + tableName
-      + '?api_key='
-      + apiKey;
+          if (!key) {
+            return;
+          }
 
-    const pageToFetch = (page: 'first' | 'next', offset?: string) => {
-      switch(page) {
-        case 'first':
-          return apiBaseUrl
-            + '&fields=' + primaryKeyField
-            + '&fields=' + theCopyField
-            ;
-
-        case 'next':
-          return apiBaseUrl + '&offset=' + offset;
+          // Update allStrings object, to be sent to the plugin
+          allStringsArr.push({[key]: value})
+          // console.log(allStrings[key]); // debug
+        })
       }
-    }
 
-    const getResults = async (page: 'first' | 'next', offset?: string) => {
-      var url = pageToFetch(page, offset);
-      var records: string;
-      var response = await makeAirtableCall(url);
+      const apiKey = airtableConfig.apiKey;
+      const baseId = airtableConfig.baseId;
+      const tableName = airtableConfig.tableName;
+      const primaryKeyField = airtableConfig.primaryKeyField;
+      const theCopyField = airtableConfig.theCopyField;
+      const apiBaseUrl = 'https://api.airtable.com/v0/'
+        + baseId
+        + '/'
+        + tableName
+        + '?api_key='
+        + apiKey;
 
-      // Amend the allStrings object, to be passed back to the plugin
-      if (typeof(response) === 'string') {
+      const pageToFetch = (page: 'first' | 'next', offset?: string) => {
+        switch(page) {
+          case 'first':
+            return apiBaseUrl
+              + '&fields=' + primaryKeyField
+              + '&fields=' + theCopyField
+              + '&filterByFormula=AND(NOT(key=""),NOT(theCopy=""))'
+              ;
+
+          case 'next':
+            return apiBaseUrl
+              + '&offset=' + offset
+              ;
+        }
+      }
+
+      const getResults = async (page: 'first' | 'next', offset?: string) => {
+        var url = pageToFetch(page, offset);
+        var records: string;
+        var response = await makeAirtableCall(url) as string;
+
+        // Amend the allStrings object, to be passed back to the plugin
         records = JSON.parse(response).records;
         offset = JSON.parse(response).offset;
+        // console.log(records); // debug
         addStrings(records);
+
+        // Get next page if it's there
+        if (offset) await getResults('next', offset);
       }
 
-      // Get next page if it's there
-      if (offset) getResults('next', offset);
+      await getResults('first');
+
+      // Conver allStringsArr to an object
+      var allStringsObj = Object.assign({}, ...allStringsArr);
+      // console.log(allStringsObj); // debug
+
+
+      var msgToPlugin = {
+        type: 'sync-airtable-strings',
+        strings: allStringsObj
+      }
+
+      // console.log(msgToPlugin); // debug
+      parent.postMessage({ pluginMessage: msgToPlugin }, '*');
     }
-
-    getResults('first');
-    // console.log(allStrings); // debug
-
+    getAllStrings();
   }
 }
 

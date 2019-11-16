@@ -85,11 +85,10 @@ figma.ui.onmessage = async (msg) => {
   }
 
   if (msg.type = 'sync-airtable-strings') {
-    // console.log('sync msg received'); // for debugging
-    console.log(msg.response); // for debugging
+    console.log('Plugin received from UI: ', msg.strings); // debug
   }
 
-  figma.closePlugin();
+  // figma.closePlugin();
 }
 
 // function changeTextToTag () {
