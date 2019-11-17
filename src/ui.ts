@@ -1,5 +1,3 @@
-import { prototype } from "events";
-
 var apiKey = document.getElementById('api-key');
 var baseId = document.getElementById('base-id');
 var tableName = document.getElementById('table-name')
@@ -95,7 +93,7 @@ onmessage = (event) => {
 
       await getResults('first');
 
-      // Conver allStringsArr to an object
+      // Convert allStringsArr to an object
       var allStringsObj = Object.assign({}, ...allStringsArr);
       // console.log(allStringsObj); // debug
 
