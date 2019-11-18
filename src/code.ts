@@ -51,7 +51,7 @@ var setAirtableConfig = {
 }
 
 if (figma.command === 'config') {
-  figma.showUI(__html__);
+  figma.showUI(__html__, { width: 500, height: 500 });
   figma.ui.postMessage( { type: 'config', airtableConfig } );
 }
 
