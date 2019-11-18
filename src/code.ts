@@ -58,7 +58,7 @@ function replaceText(airtableData: object) {
     if (node.hasMissingFont) {
 
       // TODO handle missing fonts
-      console.log('There are missing fonts. Not updating ' + node.name + '.')
+      console.log('There are missing fonts. Not updating ', node.name, '.')
       return;
 
     } else {
@@ -69,7 +69,7 @@ function replaceText(airtableData: object) {
       // Replace the text in the node
       // console.log(airtableData[getVariableName(node.name)]); // debug
 
-      var str = airtableData[getVariableName(node.name)] || '!! NOT IN DB'
+      var str = airtableData[getVariableName(node.name)] || '!! This string isn\'t in the database'
       node.characters = str;
 
     }
