@@ -13,14 +13,16 @@ export const airtableMap = {
   , tableName: 'tableName'
   , primaryKeyField: 'primaryKeyField'
   , theCopyField: 'theCopyField'
+  , lastUpdatedDate: 'lastUpdatedDate'
 };
 
 export var airtableConfig = {
-  apiKey: getData(airtableMap.apiKey),
-  baseId: getData(airtableMap.baseId),
-  tableName: getData(airtableMap.tableName),
-  primaryKeyField: getData(airtableMap.primaryKeyField),
-  theCopyField: getData(airtableMap.theCopyField)
+    apiKey: getData(airtableMap.apiKey)
+  , baseId: getData(airtableMap.baseId)
+  , tableName: getData(airtableMap.tableName)
+  , primaryKeyField: getData(airtableMap.primaryKeyField)
+  , theCopyField: getData(airtableMap.theCopyField)
+  , lastUpdatedDate: getData(airtableMap.lastUpdatedDate)
 }
 
 export const setAirtableConfig = {
@@ -47,5 +49,33 @@ export const setAirtableConfig = {
   theCopyField: (val: string) => {
     setData(airtableMap.theCopyField, val);
     airtableConfig.theCopyField = getData(airtableMap.theCopyField);
+  },
+
+  lastUpdatedDate: () => {
+    setData(airtableMap.lastUpdatedDate, stringifyDatetime());
+    airtableConfig.lastUpdatedDate = getData(airtableMap.lastUpdatedDate);
+  },
+}
+
+const stringifyDatetime = () => {
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  // Append leading zero to one-digit numbers (e.g., 1 => 01)
+  const addLeadingZero = (num: number) => {
+    return num <= 9 ? '0' + num : num;
   }
+
+  let currentDatetime = new Date();
+
+  let dateString = currentDatetime.getDate()
+    + ' ' + (months[currentDatetime.getMonth()]) // get name of month
+    + ' ' + currentDatetime.getFullYear(); // get four-digit year
+
+  let timeString = addLeadingZero(currentDatetime.getHours())
+    + ':' + addLeadingZero(currentDatetime.getMinutes());
+
+  return dateString + ' at ' + timeString;
 }

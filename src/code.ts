@@ -34,6 +34,7 @@ figma.ui.onmessage = async (msg) => {
     setAirtableConfig.tableName(keys.tableName);
     setAirtableConfig.primaryKeyField(keys.primaryKeyField);
     setAirtableConfig.theCopyField(keys.theCopyField);
+    setAirtableConfig.lastUpdatedDate();
     console.log('Saved new airtable config: ', airtableConfig);
   }
 

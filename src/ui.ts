@@ -3,6 +3,7 @@ var baseId = document.getElementById('base-id');
 var tableName = document.getElementById('table-name')
 var primaryKeyField = document.getElementById('primary-key-field');
 var theCopyField = document.getElementById('the-copy-field');
+var lastUpdatedDate = document.getElementById('updated-date');
 
 const getFieldValue = (data: string) => {
   if (!data) return '';
@@ -15,13 +16,14 @@ onmessage = (event) => {
 
   if (type === 'config') {
     const data = msg.airtableConfig;
-    console.log("Received from plugin: ", data);
+    console.log("Received from plugin: ", data); // debug
 
     apiKey['value'] = getFieldValue(data.apiKey);
     baseId['value'] = getFieldValue(data.baseId);
     tableName['value'] = getFieldValue(data.tableName);
     primaryKeyField['value'] = getFieldValue(data.primaryKeyField);
     theCopyField['value'] = getFieldValue(data.theCopyField);
+    lastUpdatedDate['innerHTML'] = getFieldValue(data.lastUpdatedDate);
   }
 
   if (type === 'sync') {
@@ -112,11 +114,12 @@ onmessage = (event) => {
 
 document.getElementById('save').onclick = () => {
   const keys = {
-    apiKey: getFieldValue(apiKey['value']),
-    baseId: getFieldValue(baseId['value']),
-    tableName: getFieldValue(tableName['value']),
-    primaryKeyField: getFieldValue(primaryKeyField['value']),
-    theCopyField: getFieldValue(theCopyField['value'])
+      apiKey: getFieldValue(apiKey['value'])
+    , baseId: getFieldValue(baseId['value'])
+    , tableName: getFieldValue(tableName['value'])
+    , primaryKeyField: getFieldValue(primaryKeyField['value'])
+    , theCopyField: getFieldValue(theCopyField['value'])
+
   };
 
   console.log('Sending to plugin: ', keys);
