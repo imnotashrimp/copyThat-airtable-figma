@@ -10,7 +10,7 @@ if (figma.command === 'sync' ) {
   figma.ui.postMessage({ type: 'sync', airtableConfig });
 }
 
-const variablePattern = /^\{{2}(.+)\}{2}$/m;
+const variablePattern = /(?:.*\{{2})(.+)(?:\}{2}.*)/;
 
 const isVariable = (testString: string) => {
   // Test if input string is a variable
@@ -25,7 +25,7 @@ const getVariableName = (testString: string) => {
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 figma.ui.onmessage = async (msg) => {
-  // console.log(msg) // for debugging. comment out this line.
+  // console.log(msg) // debug
 
   if (msg.type === 'save-airtable-config') {
     const keys = msg.keys;
@@ -70,6 +70,7 @@ function replaceText(airtableData: object) {
       // console.log(airtableData[getVariableName(node.name)]); // debug
 
       var str = airtableData[getVariableName(node.name)] || '!! This string isn\'t in the database'
+      // console.log(node.name, 'variable name: ', getVariableName(node.name)); // debug
       node.characters = str;
 
     }
