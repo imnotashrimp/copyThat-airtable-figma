@@ -7,45 +7,45 @@ const setData = (key: string, value: string) => {
   return;
 }
 
-export const airtableKeys = {
-  apiKey: 'apiKey',
-  baseId: 'baseId',
-  tableName: 'tableName',
-  primaryKeyField: 'primaryKeyField',
-  theCopyField: 'theCopyField'
+export const airtableMap = {
+    apiKey: 'apiKey'
+  , baseId: 'baseId'
+  , tableName: 'tableName'
+  , primaryKeyField: 'primaryKeyField'
+  , theCopyField: 'theCopyField'
 };
 
 export var airtableConfig = {
-  apiKey: getData(airtableKeys.apiKey),
-  baseId: getData(airtableKeys.baseId),
-  tableName: getData(airtableKeys.tableName),
-  primaryKeyField: getData(airtableKeys.primaryKeyField),
-  theCopyField: getData(airtableKeys.theCopyField)
+  apiKey: getData(airtableMap.apiKey),
+  baseId: getData(airtableMap.baseId),
+  tableName: getData(airtableMap.tableName),
+  primaryKeyField: getData(airtableMap.primaryKeyField),
+  theCopyField: getData(airtableMap.theCopyField)
 }
 
 export const setAirtableConfig = {
   apiKey: (val: string) => {
-    setData(airtableKeys.apiKey, val);
-    airtableConfig.apiKey = getData(airtableKeys.apiKey);
+    setData(airtableMap.apiKey, val);
+    airtableConfig.apiKey = getData(airtableMap.apiKey);
   },
 
   baseId: (val: string) => {
-    setData(airtableKeys.baseId, val);
-    airtableConfig.baseId = getData(airtableKeys.baseId);
+    setData(airtableMap.baseId, val);
+    airtableConfig.baseId = getData(airtableMap.baseId);
   },
 
   tableName: (val: string) => {
-    setData(airtableKeys.tableName, val);
-    airtableConfig.tableName = getData(airtableKeys.tableName);
+    setData(airtableMap.tableName, val);
+    airtableConfig.tableName = getData(airtableMap.tableName);
   },
 
   primaryKeyField: (val: string) => {
-    setData(airtableKeys.primaryKeyField, val);
-    airtableConfig.primaryKeyField = getData(airtableKeys.primaryKeyField);
+    setData(airtableMap.primaryKeyField, val);
+    airtableConfig.primaryKeyField = getData(airtableMap.primaryKeyField);
   },
 
   theCopyField: (val: string) => {
-    setData(airtableKeys.theCopyField, val);
-    airtableConfig.theCopyField = getData(airtableKeys.theCopyField);
+    setData(airtableMap.theCopyField, val);
+    airtableConfig.theCopyField = getData(airtableMap.theCopyField);
   }
 }
