@@ -1,0 +1,25 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "webpack: run locally",
+      "type": "shell",
+      "command": "npx webpack --mode=development --watch",
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
+      "isBackground": true
+    },
+    {
+      "label": "webpack: build",
+      "type": "shell",
+      "command": "npx webpack --mode=production",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
