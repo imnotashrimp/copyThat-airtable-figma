@@ -30,6 +30,7 @@ onmessage = (event) => {
     const getAllStrings = async () => {
       console.log('sync called');
       const airtableConfig = msg.airtableConfig;
+      const varNames = msg.varNames;
       var allStringsArr = [];
 
       const addStrings = (records) => {
@@ -50,11 +51,23 @@ onmessage = (event) => {
         })
       }
 
+      const createFilterString = (varNames, primaryKeyField: string) => {
+        var filterString = []
+
+        varNames.forEach(element => {
+          filterString.push(primaryKeyField + '=\'' + element + '\'');
+        });
+
+        return 'OR(' + filterString.join(',') + ')';
+      }
+
       const apiKey = airtableConfig.apiKey;
       const baseId = airtableConfig.baseId;
       const tableName = airtableConfig.tableName;
       const primaryKeyField = airtableConfig.primaryKeyField;
       const theCopyField = airtableConfig.theCopyField;
+      const filter = createFilterString(varNames, primaryKeyField);
+
       const apiBaseUrl = 'https://api.airtable.com/v0/'
         + baseId
         + '/'
@@ -68,7 +81,7 @@ onmessage = (event) => {
             return apiBaseUrl
               + '&fields=' + primaryKeyField
               + '&fields=' + theCopyField
-              + '&filterByFormula=AND(NOT(key=""),NOT(theCopy=""))'
+              + '&filterByFormula=' + filter
               ;
 
           case 'next':
