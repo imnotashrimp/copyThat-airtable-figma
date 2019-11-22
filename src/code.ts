@@ -1,24 +1,41 @@
 import { airtableConfig, setAirtableConfig } from './airtable'
 
+const variablePattern = /(?:.*\{{2})(.+)(?:\}{2}.*)/;
+
+// TODO rename
+const isVariable = (testString: string) => {
+  // If input string is a variable, return `true`
+  return variablePattern.test(testString);
+}
+
+// TODO rename
+const getVariableName = (testString: string) => {
+  return testString.replace(variablePattern, '$1');
+}
+
 if (figma.command === 'config') {
   figma.showUI(__html__, { width: 500, height: 500 });
   figma.ui.postMessage( { type: 'config', airtableConfig } );
 }
 
 if (figma.command === 'sync' ) {
+  // Initialize empty array for Airtable filter
+  var varNames = [];
+
+  const nodes = figma.root.findAll(node => node.type === "TEXT");
+
+  // Add variable name to varNames array
+  nodes.forEach(async (node: TextNode) => {
+    if (!isVariable(node.name)) return;
+
+    // console.log(node.name, ' is variable') // debug
+    varNames.push(getVariableName(node.name));
+  });
+
+  // console.log(varNames); // debug
+
   figma.showUI(__html__, { visible: false });
-  figma.ui.postMessage({ type: 'sync', airtableConfig });
-}
-
-const variablePattern = /(?:.*\{{2})(.+)(?:\}{2}.*)/;
-
-const isVariable = (testString: string) => {
-  // Test if input string is a variable
-  return variablePattern.test(testString);
-}
-
-const getVariableName = (testString: string) => {
-  return testString.replace(variablePattern, '$1');
+  figma.ui.postMessage({ type: 'sync', airtableConfig, varNames });
 }
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
@@ -47,7 +64,7 @@ figma.ui.onmessage = async (msg) => {
 }
 
 function replaceText(airtableData: object) {
-  console.log(airtableData);
+  // console.log(airtableData); // debug
   const nodes = figma.root.findAll(node => node.type === "TEXT");
 
   nodes.forEach(async (node: TextNode) => {
