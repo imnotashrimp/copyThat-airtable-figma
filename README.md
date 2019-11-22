@@ -1,22 +1,82 @@
-This plugin template uses Typescript. If you are familiar with Javascript, Typescript will
-look very familiar. In fact, valid Javascript code is already valid Typescript code.
+# Airtable CMS for Figma
 
-Typescript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
+## Installation
 
-For more information, visit https://www.typescriptlang.org/
+<!-- TODO installation -->
 
-Using Typescript requires a compiler to convert Typescript (code.ts) into Javascript (code.js)
-for the browser to run.
+## Using the plugin
 
-To get the TypeScript compiler working:
+<!-- TODO usage  -->
 
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Install the TypeScript compiler globally: `sudo npm install -g typescript`.
-3. Open this directory in Visual Studio Code.
-4. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "tsc: watch - tsconfig.json". You will have to do this again every time
-    you reopen Visual Studio Code.
+## Contributions
 
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+<!-- TODO - license & contributions -->
+
+### Running locally
+
+Figma recommends writing plugins in TypeScript.
+I found it easy enough to learn.
+
+If you're not familiar with TypeScript,
+you can learn about it at https://www.typescriptlang.org/.
+
+#### To develop & run the plugin
+
+I'm on macOS.
+These instructions should also work for Linux
+(but I haven't tested yet).
+If you're on Windows, please feel free to add separate instructions.
+
+**Before you begin, you'll need**:
+[Visual Studio Code](https://code.visualstudio.com/download),
+[npm](https://www.npmjs.com/get-npm),
+Figma Desktop (this won't work in your browser)
+
+##### 1. Open this repo in Visual Studio Code
+
+```shell
+git clone https://github.com/imnotashrimp/figma-plugin-airtable-cms.git
+code figma-plugin-airtable-cms
+```
+
+##### 2. Install TypeScript & other dependencies
+
+In Visual Studio Code, open the terminal
+(in the menu, **Terminal > New Terminal**).
+
+Run these commands:
+
+```shell
+sudo npm install -g TypeScript
+npm install
+```
+
+##### 3. Run the plugin
+
+In the menu, run **Terminal > Run Task...**,
+then select **webpack: run locally**.
+
+Keep the plugin running in the background
+so you can develop & test in Figma.
+
+##### 4. Load the plugin in Figma
+
+Open Figma Desktop.
+In the menu, select **Plugins > Development > New Plugin...**.
+Click the button under **Link existing plugin**, and select `manifest.json` from this project.
+
+After that, you can use the plugin under the **Plugins > Development** menu.
+
+## Roadmap
+
+In no particular order, here's what I'm thinking for future development:
+
+1. Strip spaces from beginning and end of all strings.
+1. Filter Airtable requests to only strings in this design
+  (Currently: Plugin requests all strings.
+  It's fine for the 135 I have, but probably an issue when you get to the thousands.)
+1. Replace only the strings on _this_ page, the strings contained in _this_ node
+  (Currently: Replace all strings in the design)
+1. Show/hide status indicators over affected text boxes.
+  For example, a green dot = text was synced, red = failed sync.
+1. A "last sync" text box above each page
