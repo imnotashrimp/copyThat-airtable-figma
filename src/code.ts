@@ -68,11 +68,10 @@ function replaceText(airtableData: object) {
       await figma.loadFontAsync(node.fontName as FontName);
 
       // Replace the text in the node
-      // console.log(airtableData[getVariableName(node.name)]); // debug
-
       var str = airtableData[getVariableName(node.name)] || '!! This string isn\'t in the database'
-      // console.log(node.name, 'variable name: ', getVariableName(node.name)); // debug
       node.characters = str;
+      // console.log(airtableData[getVariableName(node.name)]); // debug
+      // console.log(node.name, 'variable name: ', getVariableName(node.name)); // debug
 
     }
 
