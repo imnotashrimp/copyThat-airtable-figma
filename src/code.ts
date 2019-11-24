@@ -1,4 +1,6 @@
-import { airtableConfig, setAirtableConfig } from './airtable'
+import { getAirtableConfig, setAirtableConfig } from './airtable'
+
+const airtableConfig = getAirtableConfig();
 
 const variablePattern = /(?:.*\{{2})(.+)(?:\}{2}.*)/;
 
@@ -46,13 +48,8 @@ figma.ui.onmessage = async (msg) => {
 
   if (msg.type === 'save-airtable-config') {
     const keys = msg.keys;
-    setAirtableConfig.apiKey(keys.apiKey);
-    setAirtableConfig.baseId(keys.baseId);
-    setAirtableConfig.tableName(keys.tableName);
-    setAirtableConfig.primaryKeyField(keys.primaryKeyField);
-    setAirtableConfig.theCopyField(keys.theCopyField);
-    setAirtableConfig.lastUpdatedDate();
-    console.log('Saved new airtable config: ', airtableConfig);
+    setAirtableConfig(keys.apiKey, keys.baseId, keys.tableName, keys.primaryKeyField, keys.theCopyField)
+    console.log('Saved new airtable config: ', getAirtableConfig());
   }
 
   if (msg.type = 'sync-airtable-strings') {

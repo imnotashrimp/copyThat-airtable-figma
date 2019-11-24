@@ -16,7 +16,7 @@ onmessage = (event) => {
 
   if (type === 'config') {
     const data = msg.airtableConfig;
-    console.log("Received from plugin: ", data); // debug
+    // console.log("Received from plugin: ", data); // debug
 
     apiKey['value'] = getFieldValue(data.apiKey);
     baseId['value'] = getFieldValue(data.baseId);
