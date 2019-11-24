@@ -16,45 +16,25 @@ export const airtableMap = {
   , lastUpdatedDate: 'lastUpdatedDate'
 };
 
-export var airtableConfig = {
-    apiKey: getData(airtableMap.apiKey)
-  , baseId: getData(airtableMap.baseId)
-  , tableName: getData(airtableMap.tableName)
-  , primaryKeyField: getData(airtableMap.primaryKeyField)
-  , theCopyField: getData(airtableMap.theCopyField)
-  , lastUpdatedDate: getData(airtableMap.lastUpdatedDate)
+export const getAirtableConfig = (key?: string) => {
+  if (key && key !== 'all') return getData(airtableMap[key]) as string;
+
+  var allConfigArr = [];
+  Object.keys(airtableMap).forEach((key) => {
+    allConfigArr.push({[key]: getAirtableConfig(key)});
+  });
+  var allConfigObj = Object.assign({}, ...allConfigArr)
+  return allConfigObj as object;
 }
 
-export const setAirtableConfig = {
-  apiKey: (val: string) => {
-    setData(airtableMap.apiKey, val);
-    airtableConfig.apiKey = getData(airtableMap.apiKey);
-  },
-
-  baseId: (val: string) => {
-    setData(airtableMap.baseId, val);
-    airtableConfig.baseId = getData(airtableMap.baseId);
-  },
-
-  tableName: (val: string) => {
-    setData(airtableMap.tableName, val);
-    airtableConfig.tableName = getData(airtableMap.tableName);
-  },
-
-  primaryKeyField: (val: string) => {
-    setData(airtableMap.primaryKeyField, val);
-    airtableConfig.primaryKeyField = getData(airtableMap.primaryKeyField);
-  },
-
-  theCopyField: (val: string) => {
-    setData(airtableMap.theCopyField, val);
-    airtableConfig.theCopyField = getData(airtableMap.theCopyField);
-  },
-
-  lastUpdatedDate: () => {
-    setData(airtableMap.lastUpdatedDate, stringifyDatetime());
-    airtableConfig.lastUpdatedDate = getData(airtableMap.lastUpdatedDate);
-  },
+export const setAirtableConfig = (apiKey: string, baseId: string, tableName: string, primaryKeyField: string, theCopyField: string) => {
+  setData(airtableMap.apiKey, apiKey);
+  setData(airtableMap.baseId, baseId);
+  setData(airtableMap.tableName, tableName);
+  setData(airtableMap.primaryKeyField, primaryKeyField);
+  setData(airtableMap.theCopyField, theCopyField);
+  setData(airtableMap.lastUpdatedDate, stringifyDatetime());
+  return;
 }
 
 const stringifyDatetime = () => {
