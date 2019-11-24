@@ -4,13 +4,19 @@
 
 <!-- TODO installation -->
 
+todo
+
 ## Using the plugin
 
 <!-- TODO usage  -->
 
+todo
+
 ## Contributions
 
 <!-- TODO - license & contributions -->
+
+todo
 
 ### Running locally
 
@@ -69,14 +75,4 @@ After that, you can use the plugin under the **Plugins > Development** menu.
 
 ## Roadmap
 
-In no particular order, here's what I'm thinking for future development:
-
-1. Strip spaces from beginning and end of all strings.
-1. Filter Airtable requests to only strings in this design
-  (Currently: Plugin requests all strings.
-  It's fine for the 135 I have, but probably an issue when you get to the thousands.)
-1. Replace only the strings on _this_ page, the strings contained in _this_ node
-  (Currently: Replace all strings in the design)
-1. Show/hide status indicators over affected text boxes.
-  For example, a green dot = text was synced, red = failed sync.
-1. A "last sync" text box above each page
+Find the v1 release roadmap [here](https://github.com/imnotashrimp/figma-plugin-airtable-cms/milestone/1).
