@@ -27,7 +27,13 @@ export const getAirtableConfig = (key?: string) => {
   return allConfigObj as object;
 }
 
-export const setAirtableConfig = (apiKey: string, baseId: string, tableName: string, primaryKeyField: string, theCopyField: string) => {
+export const setAirtableConfig = (
+    apiKey: string
+  , baseId: string
+  , tableName: string
+  , primaryKeyField: string
+  , theCopyField: string
+) => {
   setData(airtableMap.apiKey, apiKey);
   setData(airtableMap.baseId, baseId);
   setData(airtableMap.tableName, tableName);
