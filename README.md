@@ -1,8 +1,8 @@
-# Airtable CMS for Figma
+# Airtable CopySync for Figma
 
-<!-- TODO intro -->
-
-todo
+Airtable CopySync is a Figma plugin
+that inserts strings from your Airtable base in your Figma design.
+It makes it easier to manage "source of truth" for your copy.
 
 ## Setting up Airtable
 
