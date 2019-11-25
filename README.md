@@ -30,7 +30,7 @@ Some easy ways you can make this happen:
 <table><td>
 <strong>Important</strong>:
 If there are duplicates in the key field,
-both results will be returned,
+all matching results will be returned,
 and the plugin will use whichever it comes across first.
 As of v1, the plugin won't catch this as an error.
 </td></table>
