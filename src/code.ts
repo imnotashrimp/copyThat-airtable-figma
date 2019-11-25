@@ -9,8 +9,7 @@ const isVar = (testString: string) => {
   return variablePattern.test(testString);
 }
 
-// TODO rename
-const getVariableName = (testString: string) => {
+const getVarName = (testString: string) => {
   return testString.replace(variablePattern, '$1');
 }
 
@@ -30,7 +29,7 @@ if (figma.command === 'sync' ) {
     if (!isVar(node.name)) return;
 
     // console.log(node.name, ' is variable') // debug
-    varNames.push(getVariableName(node.name));
+    varNames.push(getVarName(node.name));
   });
 
   // console.log(varNames); // debug
@@ -81,10 +80,10 @@ function replaceText(airtableData: object) {
       await figma.loadFontAsync(node.fontName as FontName);
 
       // Replace the text in the node
-      var str = airtableData[getVariableName(node.name)] || '!! This string isn\'t in the database'
+      var str = airtableData[getVarName(node.name)] || '!! This string isn\'t in the database'
       node.characters = str;
-      // console.log(airtableData[getVariableName(node.name)]); // debug
-      // console.log(node.name, 'variable name: ', getVariableName(node.name)); // debug
+      // console.log(airtableData[getVarName(node.name)]); // debug
+      // console.log(node.name, 'variable name: ', getVarName(node.name)); // debug
 
     }
 
