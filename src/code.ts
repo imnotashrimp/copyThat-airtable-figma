@@ -4,8 +4,7 @@ const airtableConfig = getAirtableConfig();
 
 const variablePattern = /(?:.*\{{2})(.+)(?:\}{2}.*)/;
 
-// TODO rename
-const isVariable = (testString: string) => {
+const isVar = (testString: string) => {
   // If input string is a variable, return `true`
   return variablePattern.test(testString);
 }
@@ -28,7 +27,7 @@ if (figma.command === 'sync' ) {
 
   // Add variable name to varNames array
   nodes.forEach(async (node: TextNode) => {
-    if (!isVariable(node.name)) return;
+    if (!isVar(node.name)) return;
 
     // console.log(node.name, ' is variable') // debug
     varNames.push(getVariableName(node.name));
@@ -65,7 +64,7 @@ function replaceText(airtableData: object) {
   const nodes = figma.root.findAll(node => node.type === "TEXT");
 
   nodes.forEach(async (node: TextNode) => {
-    if (!isVariable(node.name)) return;
+    if (!isVar(node.name)) return;
 
     // console.log(node.name + 'is a variable. Replacing text.')
     node.autoRename = false;
