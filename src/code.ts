@@ -1,17 +1,7 @@
 import { getAirtableConfig, setAirtableConfig } from './airtable'
+import { isVar, getVarName } from './var-test'
 
 const airtableConfig = getAirtableConfig();
-
-const variablePattern = /(?:.*\{{2})(.+)(?:\}{2}.*)/;
-
-const isVar = (testString: string) => {
-  // If input string is a variable, return `true`
-  return variablePattern.test(testString);
-}
-
-const getVarName = (testString: string) => {
-  return testString.replace(variablePattern, '$1');
-}
 
 if (figma.command === 'config') {
   figma.showUI(__html__, { width: 500, height: 500 });
