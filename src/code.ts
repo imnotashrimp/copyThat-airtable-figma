@@ -1,5 +1,6 @@
 import { getAirtableConfig, setAirtableConfig } from './airtable'
 import { isVar, getVarName } from './var-test'
+import { replaceText } from './replace-text'
 
 const airtableConfig = getAirtableConfig();
 
@@ -37,7 +38,7 @@ figma.ui.onmessage = async (msg) => {
   if (msg.type === 'save-airtable-config') {
     const keys = msg.keys;
     setAirtableConfig(keys.apiKey, keys.baseId, keys.tableName, keys.primaryKeyField, keys.theCopyField)
-    console.log('Saved new airtable config: ', getAirtableConfig());
+    // console.log('Saved new airtable config: ', getAirtableConfig()); // debug
   }
 
   if (msg.type = 'sync-airtable-strings') {
@@ -46,36 +47,4 @@ figma.ui.onmessage = async (msg) => {
   }
 
   figma.closePlugin();
-}
-
-function replaceText(airtableData: object) {
-  // console.log(airtableData); // debug
-  const nodes = figma.root.findAll(node => node.type === "TEXT");
-
-  nodes.forEach(async (node: TextNode) => {
-    if (!isVar(node.name)) return;
-
-    // console.log(node.name + 'is a variable. Replacing text.')
-    node.autoRename = false;
-
-    if (node.hasMissingFont) {
-
-      // TODO handle missing fonts
-      console.log('There are missing fonts. Not updating ', node.name, '.')
-      return;
-
-    } else {
-
-      // Figma requires this bit when replacing text
-      await figma.loadFontAsync(node.fontName as FontName);
-
-      // Replace the text in the node
-      var str = airtableData[getVarName(node.name)] || '!! This string isn\'t in the database'
-      node.characters = str;
-      // console.log(airtableData[getVarName(node.name)]); // debug
-      // console.log(node.name, 'variable name: ', getVarName(node.name)); // debug
-
-    }
-
-  });
 }
