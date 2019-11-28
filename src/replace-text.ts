@@ -20,8 +20,8 @@ export const replaceText = (airtableData: object) => {
 }
 
 function handleMissingFont (node: TextNode) {
-  // TODO handle missing fonts
-  console.log('There are missing fonts. Not updating ', node.name, '.')
+  console.log('There are missing fonts. Not updating ', node.name, '.');
+  figma.notify('Missing fonts on ' + node.name + '. Not updating this node.');
 }
 
 async function replaceTheText (node: TextNode, airtableData: object) {
@@ -31,6 +31,7 @@ async function replaceTheText (node: TextNode, airtableData: object) {
   // Replace the text in the node
   var str = airtableData[getVarName(node.name)]
   node.characters = str || '!! This string isn\'t in Airtable';
+  if (!str) figma.notify(node.name + ' isn\'t in Airtable.');
   // console.log(airtableData[getVarName(node.name)]); // debug
   // console.log(node.name, 'variable name: ', getVarName(node.name)); // debug
 }
