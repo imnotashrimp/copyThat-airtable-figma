@@ -11,23 +11,26 @@ export const replaceText = (airtableData: object) => {
     node.autoRename = false;
 
     if (node.hasMissingFont) {
-
-      // TODO handle missing fonts
-      console.log('There are missing fonts. Not updating ', node.name, '.')
+      handleMissingFont(node);
       return;
-
     } else {
-
-      // Figma requires this bit when replacing text
-      await figma.loadFontAsync(node.fontName as FontName);
-
-      // Replace the text in the node
-      var str = airtableData[getVarName(node.name)]
-      node.characters = str || '!! This string isn\'t in Airtable';
-      // console.log(airtableData[getVarName(node.name)]); // debug
-      // console.log(node.name, 'variable name: ', getVarName(node.name)); // debug
-
+      replaceTheText(node, airtableData);
     }
-
   });
+}
+
+function handleMissingFont (node: TextNode) {
+  // TODO handle missing fonts
+  console.log('There are missing fonts. Not updating ', node.name, '.')
+}
+
+async function replaceTheText (node: TextNode, airtableData: object) {
+  // Figma requires this bit when replacing text
+  await figma.loadFontAsync(node.fontName as FontName);
+
+  // Replace the text in the node
+  var str = airtableData[getVarName(node.name)]
+  node.characters = str || '!! This string isn\'t in Airtable';
+  // console.log(airtableData[getVarName(node.name)]); // debug
+  // console.log(node.name, 'variable name: ', getVarName(node.name)); // debug
 }
