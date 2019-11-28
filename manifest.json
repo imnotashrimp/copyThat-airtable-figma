@@ -5,7 +5,7 @@
   "main": "dist/code.js",
   "ui": "dist/ui.html",
   "menu": [
-    {"name": "Sync all copy", "command": "sync"},
+    {"name": "Sync all the copy!", "command": "sync"},
     {"name": "Configure...", "command": "config"}
   ]
 }
