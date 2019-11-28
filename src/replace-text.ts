@@ -22,8 +22,8 @@ export const replaceText = (airtableData: object) => {
       await figma.loadFontAsync(node.fontName as FontName);
 
       // Replace the text in the node
-      var str = airtableData[getVarName(node.name)] || '!! This string isn\'t in the database'
-      node.characters = str;
+      var str = airtableData[getVarName(node.name)]
+      node.characters = str || '!! This string isn\'t in Airtable';
       // console.log(airtableData[getVarName(node.name)]); // debug
       // console.log(node.name, 'variable name: ', getVarName(node.name)); // debug
 
