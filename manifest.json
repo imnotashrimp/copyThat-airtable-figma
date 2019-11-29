@@ -1,6 +1,6 @@
 {
-  "name": "Airtable CopySync",
-  "id": "771515847445846462",
+  "name": "{{copyThat.airtable}}",
+  "id": "782185813336691466",
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": "dist/ui.html",
