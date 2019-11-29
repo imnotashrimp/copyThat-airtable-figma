@@ -15,14 +15,14 @@
   }
 
   .info {
-    color:rgba(0, 0, 0, 0.3);
+    color:rgba(0, 0, 0, 0.8);
     font-size: 11px;
   }
 
   label {
     font-size: 11px;
     line-height: 16px;
-    display: block;
+    display: inline-block;
   }
 
   input {
@@ -30,6 +30,15 @@
     border: none;
     border-bottom: 1px solid silver;
     font-size: 14px;
+    display: inline-block
+  }
+
+  .caption {
+    font-size: 11px;
+    margin-top: 3px;
+    margin-bottom: 15px;
+    display: block;
+    color:rgba(0, 0, 0, 0.6);
   }
 
   .form-group {
@@ -79,14 +88,29 @@
   <p>
     <label for="api-key">Airtable API key</label>
     <input id="api-key">
+    <span class="caption">
+      From your Airtable
+      <a href="https://airtable.com/account" target="_blank">account overview</a>.
+    </span>
   </p>
   <p>
     <label for="base-id">Base ID</label>
     <input id="base-id">
+    <span class="caption">
+      In
+      <a href="https://airtable.com/api" target="_blank">https://airtable.com/api</a>,
+      click the base you want to sync.
+      It's in the URL as
+      <code>https://airtable.com/{BASE_ID}/...`</code>
+    </span>
   </p>
   <p>
     <label for="table-name">Table</label>
     <input id="table-name">
+    <span class="caption">
+      You assign this name in the base.
+      Go to your base, and copy the tab name.
+    </span>
   </p>
 </div>
 
@@ -95,10 +119,16 @@
   <p>
     <label for="primary-key-field">Primary key field</label>
     <input id="primary-key-field">
+    <span class="caption">
+      You assign this in the base.
+    </span>
   </p>
   <p>
     <label for="the-copy-field">Field with the copy</label>
     <input id="the-copy-field">
+    <span class="caption">
+      You assign this in the base.
+    </span>
   </p>
 </div>
 
