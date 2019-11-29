@@ -29,30 +29,24 @@ Some easy ways you can make this happen:
 If there are duplicates in the key field, all matching results will be returned, and the plugin will use whichever it comes across first. As of v1, the plugin won't catch this as an error.
 </td></table>
 
-## Install
+## Installation
 
 In the Figma desktop app menu, select **Plugins > Manage Plugins...**, and then click **Browse all plugins**.
 
 Find _{{copyThat.airtable}}_ and install it.
 
-## Configure
+## Usage
 
-In the Figma menu, select **Plugins > {{copyThat.airtable}} > Configure...**, and give over this information.
+### 1. Configure
 
-| Field | Where can I find it? |
-|---|---|
-| Airtable API key | Go to the [Account overview page](https://airtable.com/account), and click **Generate API key**. |
-| Base ID | Go to [https://airtable.com/api](https://airtable.com/api), then click the base you want to sync. You'll see it in the URL as `https://airtable.com/{BASE_ID}/...` |
-| Table | You assign this name in the base. Go to your base, and copy the tab name. |
-| Primary key field | You assign this in the base. |
-| Field with the copy | You assign this in the base. |
+In the Figma menu, select **Plugins > {{copyThat.airtable}} > Configure...**.
 
 <table><td>
 <strong>Note</strong>:
 As of v1, this configuration is stored with each design. I plan to have a way to sync this information between designs in a future release.
 </td></table>
 
-### Security and your API key
+#### Security and your API key
 
 As of v1 of this plugin, the API key has the same permissions as the user who created it. Airtable does not have a way to scope API key permissions. This means if you're a Base owner, your API key can add, remove, and delete records and fields.
 
@@ -60,7 +54,7 @@ Obviously, this isn't good security.
 
 A secure workaround: **Make a dedicated read-only user for this plugin, and use that API key.**
 
-## Make variables in your design
+### 2. Make variables in your design
 
 copyThat.airtable will synchronize all text fields that contain a double set of curly braces.
 
@@ -70,7 +64,7 @@ If it can't find a matching key in your base, you'll see a message in the node s
 
 The key needs to be an exact match between the node title and your Airtable base.
 
-### Keeping text node names valid
+#### Keeping text node names valid
 
 Text nodes with these names will be synced:
 
@@ -84,7 +78,7 @@ These might give you the wrong results:
 * `{{two sets}} {{of braces}}` will sync with the key `two sets`
 * `{{a set of {{nested}} braces}}` will sync with the key `a set of {{nested`
 
-## Sync
+### 3. Sync
 
 In the Figma menu, select **Plugins > {{copyThat.airtable}} > Sync all copy**.
 
