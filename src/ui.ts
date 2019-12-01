@@ -1,9 +1,31 @@
-var apiKey = document.getElementById('api-key');
-var baseId = document.getElementById('base-id');
-var tableName = document.getElementById('table-name')
-var primaryKeyField = document.getElementById('primary-key-field');
-var theCopyField = document.getElementById('the-copy-field');
-var lastUpdatedDate = document.getElementById('updated-date');
+import { isVar } from "./var-test";
+
+const fieldMap = {
+    apiKey: 'api-key'
+  , baseId: 'base-id'
+  , tableName: 'table-name'
+  , primaryKeyField: 'primary-key-field'
+  , theCopyField: 'the-copy-field'
+  , lastUpdatedDate: 'updated-date'
+}
+
+const formFields = {
+    apiKey: document.getElementById(fieldMap.apiKey)
+  , baseId: document.getElementById(fieldMap.baseId)
+  , tableName: document.getElementById(fieldMap.tableName)
+  , primaryKeyField: document.getElementById(fieldMap.primaryKeyField)
+  , theCopyField: document.getElementById(fieldMap.theCopyField)
+  , lastUpdatedDate: document.getElementById(fieldMap.lastUpdatedDate)
+}
+
+const validationMsg = {
+    apiKey: document.getElementById(fieldMap.apiKey + '-validation')
+  , baseId: document.getElementById(fieldMap.baseId + '-validation')
+  , tableName: document.getElementById(fieldMap.tableName + '-validation')
+  , primaryKeyField: document.getElementById(fieldMap.primaryKeyField + '-validation')
+  , theCopyField: document.getElementById(fieldMap.theCopyField + '-validation')
+  , mainValidationMsg: document.getElementById('main-validation-msg')
+}
 
 const getFieldValue = (data: string) => {
   if (!data) return '';
@@ -18,12 +40,12 @@ onmessage = (event) => {
     const data = msg.airtableConfig;
     // console.log("Received from plugin: ", data); // debug
 
-    apiKey['value'] = getFieldValue(data.apiKey);
-    baseId['value'] = getFieldValue(data.baseId);
-    tableName['value'] = getFieldValue(data.tableName);
-    primaryKeyField['value'] = getFieldValue(data.primaryKeyField);
-    theCopyField['value'] = getFieldValue(data.theCopyField);
-    lastUpdatedDate['innerHTML'] = getFieldValue(data.lastUpdatedDate);
+    formFields.apiKey['value'] = getFieldValue(data.apiKey);
+    formFields.baseId['value'] = getFieldValue(data.baseId);
+    formFields.tableName['value'] = getFieldValue(data.tableName);
+    formFields.primaryKeyField['value'] = getFieldValue(data.primaryKeyField);
+    formFields.theCopyField['value'] = getFieldValue(data.theCopyField);
+    formFields.lastUpdatedDate['innerHTML'] = getFieldValue(data.lastUpdatedDate);
   }
 
   if (type === 'sync') {
@@ -127,13 +149,17 @@ onmessage = (event) => {
 
 document.getElementById('save').onclick = () => {
   const keys = {
-      apiKey: getFieldValue(apiKey['value'])
-    , baseId: getFieldValue(baseId['value'])
-    , tableName: getFieldValue(tableName['value'])
-    , primaryKeyField: getFieldValue(primaryKeyField['value'])
-    , theCopyField: getFieldValue(theCopyField['value'])
-
+      apiKey: getFieldValue(formFields.apiKey['value'])
+    , baseId: getFieldValue(formFields.baseId['value'])
+    , tableName: getFieldValue(formFields.tableName['value'])
+    , primaryKeyField: getFieldValue(formFields.primaryKeyField['value'])
+    , theCopyField: getFieldValue(formFields.theCopyField['value'])
   };
+
+  // Validate
+  var isValid = validateForm(keys);
+  // Prevent saving if form isn't valid
+  if (isValid === false) return;
 
   console.log('Sending to plugin: ', keys);
   parent.postMessage({ pluginMessage: { type: 'save-airtable-config', keys } }, '*');
@@ -158,4 +184,49 @@ const makeAirtableCall = (url: string) => {
       return resolve (request.response);
     }
   })
+}
+
+function validateForm (keys) {
+  var formIsValid = true;
+  const isRequired = 'This is required';
+  const mainMsg = 'Please fix any issues';
+
+  if (keys.apiKey === '') {
+    formIsValid = false;
+    validationMsg.apiKey.innerText = isRequired;
+  } else {
+    validationMsg.apiKey.innerText = '';
+  }
+
+  if (keys.baseId === '') {
+    formIsValid = false;
+    validationMsg.baseId.innerText = isRequired;
+  } else {
+    validationMsg.baseId.innerText = '';
+  }
+
+  if (keys.tableName === '') {
+    formIsValid = false;
+    validationMsg.tableName.innerText = isRequired;
+  } else {
+    validationMsg.tableName.innerText = '';
+  }
+
+  if (keys.primaryKeyField === '') {
+    formIsValid = false;
+    validationMsg.primaryKeyField.innerText = isRequired;
+  } else {
+    validationMsg.primaryKeyField.innerText = '';
+  }
+
+  if (keys.theCopyField === '') {
+    formIsValid = false;
+    validationMsg.theCopyField.innerText = isRequired;
+  } else {
+    validationMsg.theCopyField.innerText = '';
+  }
+
+  if (formIsValid === false)
+    validationMsg.mainValidationMsg.innerText = mainMsg;
+  return formIsValid;
 }

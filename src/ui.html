@@ -4,11 +4,16 @@
   body {
     font-family: 'Roboto', 'Arial', sans-serif;
     color: rgba(0, 0, 0, 0.8);
+    font-size: 11px;
   }
 
-  h4 {
-    font-weight: normal;
-    line-height: 1.3;
+  a, a:active, a:visited {
+    color: #18A0FB;
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: 1.25rem;
     margin: 0;
     margin-bottom: 10px;
     font-weight: 600;
@@ -19,8 +24,11 @@
     font-size: 11px;
   }
 
+  .validation {
+    color: #F24822;
+  }
+
   label {
-    font-size: 11px;
     line-height: 16px;
     display: inline-block;
   }
@@ -42,9 +50,12 @@
   }
 
   .form-group {
-    border-top: 1px solid #F0F0F0;
     padding-top: 10px;
     margin-top: 20px;
+  }
+
+  .form-group:not(:first-child) {
+    border-top: 1px solid #F0F0F0;
   }
 
   .no-border {
@@ -84,10 +95,11 @@
 <!-- content -->
 <div class="form-group">
 
-  <h4>Airtable credentials</h4>
+  <h1>Airtable credentials</h1>
   <p>
     <label for="api-key">Airtable API key</label>
     <input id="api-key">
+    <span class="validation" id='api-key-validation'></span>
     <span class="caption">
       From your Airtable
       <a href="https://airtable.com/account" target="_blank">account overview</a>.
@@ -96,6 +108,7 @@
   <p>
     <label for="base-id">Base ID</label>
     <input id="base-id">
+    <span class="validation" id='base-id-validation'></span>
     <span class="caption">
       In
       <a href="https://airtable.com/api" target="_blank">https://airtable.com/api</a>,
@@ -107,6 +120,7 @@
   <p>
     <label for="table-name">Table</label>
     <input id="table-name">
+    <span class="validation" id='table-name-validation'></span>
     <span class="caption">
       You assign this name in the base.
       Go to your base, and copy the tab name.
@@ -115,10 +129,11 @@
 </div>
 
 <div class="form-group">
-  <h4>The fields</h4>
+  <h1>The fields</h1>
   <p>
     <label for="primary-key-field">Primary key field</label>
     <input id="primary-key-field">
+    <span class="validation" id='primary-key-field-validation'></span>
     <span class="caption">
       You assign this in the base.
     </span>
@@ -126,18 +141,24 @@
   <p>
     <label for="the-copy-field">Field with the copy</label>
     <input id="the-copy-field">
+    <span class="validation" id='the-copy-field-validation'></span>
     <span class="caption">
       You assign this in the base.
     </span>
   </p>
 </div>
 
-<div class="form-group no-border row">
-  <button class="primary" id="save">Save</button>
-  <button class="standard" id="cancel">Cancel</button>
+<div class="form-group no-border">
+  <div class="row">
+    <button class="primary" id="save">Save</button>
+    <button class="standard" id="cancel">Cancel</button>
+    <span>
+      <p class="info">
+        Last saved <span id="updated-date">11 Nov 2018</span>
+      </p>
+    </span>
+  </div>
   <div>
-    <p class="info">
-      Last saved <span id="updated-date">11 Nov 2018</span>
-    </p>
+    <span class="validation" id="main-validation-msg"></span>
   </div>
 </div>
