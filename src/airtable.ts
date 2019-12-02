@@ -65,3 +65,99 @@ const stringifyDatetime = () => {
 
   return dateString + ' at ' + timeString;
 }
+
+export const getStringsFromAirtable = async (airtableConfig, varNames) => {
+  var allStringsArr = [];
+  const apiKey = airtableConfig.apiKey;
+  const baseId = airtableConfig.baseId;
+  const tableName = airtableConfig.tableName;
+  const primaryKeyField = airtableConfig.primaryKeyField;
+  const theCopyField = airtableConfig.theCopyField;
+  const filter = makeAirtableFilter(varNames, primaryKeyField);
+
+  const apiBaseUrl = 'https://api.airtable.com/v0/'
+  + baseId
+  + '/'
+  + tableName
+  + '?api_key='
+  + apiKey;
+
+  const addStrings = (records) => {
+    // Parses Airtable response fields, generates new object, and appends to
+    // allStrings array
+    records.forEach((record) => {
+
+      var key = record.fields[primaryKeyField];
+      var value = record.fields[theCopyField] || '!! UNDEFINED';
+
+      if (!key) {
+        return;
+      }
+
+      // Update allStrings object, to be sent to the plugin
+      allStringsArr.push({[key]: value})
+      // console.log(allStrings[key]); // debug
+    })
+  }
+
+  const pageToFetch = (page: 'first' | 'next', offset?: string) => {
+    switch(page) {
+      case 'first':
+        return apiBaseUrl
+          + '&fields=' + primaryKeyField
+          + '&fields=' + theCopyField
+          + '&filterByFormula=' + filter
+          ;
+
+      case 'next':
+        return apiBaseUrl
+          + '&offset=' + offset
+          ;
+    }
+  }
+
+  const getResults = async (page: 'first' | 'next', offset?: string) => {
+    var url = pageToFetch(page, offset);
+    var records: string;
+    var response = await makeAirtableCall(url) as string;
+
+    // Amend the allStrings object, to be passed back to the plugin
+    records = JSON.parse(response).records;
+    offset = JSON.parse(response).offset;
+    // console.log(records); // debug
+    addStrings(records);
+
+    // Get next page if it's there
+    if (offset) await getResults('next', offset);
+  }
+
+  await getResults('first');
+  return allStringsArr as string[];
+}
+
+const makeAirtableFilter = (varNames, primaryKeyField: string) => {
+  let filterString = []
+
+  varNames.forEach(element => {
+    filterString.push(primaryKeyField + '=\'' + element + '\'');
+  });
+
+  return 'OR(' + filterString.join(',') + ')';
+}
+
+const makeAirtableCall = (url: string) => {
+  return new Promise( (resolve, reject) => {
+    var request = new XMLHttpRequest()
+    request.open('GET', url);
+
+    request.responseType = 'text';
+    try {
+      request.send();
+    } catch (error) {
+      return reject(error);
+    }
+    request.onload = () => {
+      return resolve (request.response);
+    }
+  })
+}

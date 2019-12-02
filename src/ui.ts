@@ -1,4 +1,4 @@
-import { isVar } from "./var-test";
+import { getStringsFromAirtable } from './airtable'
 
 const fieldMap = {
     apiKey: 'api-key'
@@ -49,91 +49,14 @@ onmessage = (event) => {
   }
 
   if (type === 'sync') {
+    console.log('sync called');
     const getAllStrings = async () => {
-      console.log('sync called');
-      const airtableConfig = msg.airtableConfig;
-      const varNames = msg.varNames;
-      var allStringsArr = [];
 
-      const addStrings = (records) => {
-        // Parses Airtable response fields, generates new object, and appends to
-        // allStrings array
-        records.forEach((record) => {
-
-          var key = record.fields[primaryKeyField];
-          var value = record.fields[theCopyField] || '!! UNDEFINED';
-
-          if (!key) {
-            return;
-          }
-
-          // Update allStrings object, to be sent to the plugin
-          allStringsArr.push({[key]: value})
-          // console.log(allStrings[key]); // debug
-        })
-      }
-
-      const createFilterString = (varNames, primaryKeyField: string) => {
-        var filterString = []
-
-        varNames.forEach(element => {
-          filterString.push(primaryKeyField + '=\'' + element + '\'');
-        });
-
-        return 'OR(' + filterString.join(',') + ')';
-      }
-
-      const apiKey = airtableConfig.apiKey;
-      const baseId = airtableConfig.baseId;
-      const tableName = airtableConfig.tableName;
-      const primaryKeyField = airtableConfig.primaryKeyField;
-      const theCopyField = airtableConfig.theCopyField;
-      const filter = createFilterString(varNames, primaryKeyField);
-
-      const apiBaseUrl = 'https://api.airtable.com/v0/'
-        + baseId
-        + '/'
-        + tableName
-        + '?api_key='
-        + apiKey;
-
-      const pageToFetch = (page: 'first' | 'next', offset?: string) => {
-        switch(page) {
-          case 'first':
-            return apiBaseUrl
-              + '&fields=' + primaryKeyField
-              + '&fields=' + theCopyField
-              + '&filterByFormula=' + filter
-              ;
-
-          case 'next':
-            return apiBaseUrl
-              + '&offset=' + offset
-              ;
-        }
-      }
-
-      const getResults = async (page: 'first' | 'next', offset?: string) => {
-        var url = pageToFetch(page, offset);
-        var records: string;
-        var response = await makeAirtableCall(url) as string;
-
-        // Amend the allStrings object, to be passed back to the plugin
-        records = JSON.parse(response).records;
-        offset = JSON.parse(response).offset;
-        // console.log(records); // debug
-        addStrings(records);
-
-        // Get next page if it's there
-        if (offset) await getResults('next', offset);
-      }
-
-      await getResults('first');
+      let allStringsArr = await getStringsFromAirtable(msg.airtableConfig, msg.varNames)
 
       // Convert allStringsArr to an object
       var allStringsObj = Object.assign({}, ...allStringsArr);
       // console.log(allStringsObj); // debug
-
 
       var msgToPlugin = {
         type: 'sync-airtable-strings',
@@ -167,23 +90,6 @@ document.getElementById('save').onclick = () => {
 
 document.getElementById('cancel').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
-}
-
-const makeAirtableCall = (url: string) => {
-  return new Promise( (resolve, reject) => {
-    var request = new XMLHttpRequest()
-    request.open('GET', url);
-
-    request.responseType = 'text';
-    try {
-      request.send();
-    } catch (error) {
-      return reject(error);
-    }
-    request.onload = () => {
-      return resolve (request.response);
-    }
-  })
 }
 
 function validateForm (keys) {
