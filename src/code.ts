@@ -1,6 +1,6 @@
 import { getAirtableConfig, setAirtableConfig } from './airtable'
 import { isVar, getVarName } from './var-test'
-import { replaceText } from './replace-text'
+import { replaceText, createReportNode } from './replace-text'
 
 const airtableConfig = getAirtableConfig();
 
@@ -43,6 +43,7 @@ figma.ui.onmessage = async (msg) => {
 
   if (msg.type === 'sync-airtable-strings') {
     // console.log('Plugin received from UI: ', msg.strings); // debug
+    createReportNode();
     replaceText(msg.strings);
   }
 
