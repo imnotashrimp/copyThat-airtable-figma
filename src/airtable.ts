@@ -67,7 +67,7 @@ const stringifyDatetime = () => {
 }
 
 export const getStringsFromAirtable = async (airtableConfig, varNames) => {
-  var allStringsArr = [];
+  let allStringsArr = [];
   const apiKey = airtableConfig.apiKey;
   const baseId = airtableConfig.baseId;
   const tableName = airtableConfig.tableName;
@@ -119,11 +119,13 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
   const getResults = async (page: 'first' | 'next', offset?: string) => {
     var url = pageToFetch(page, offset);
     var records: string;
-    var response = await makeAirtableCall(url) as string;
+    var response = JSON.parse(await makeAirtableCall(url) as string);
+
+    handleBadResponse(response);
 
     // Amend the allStrings object, to be passed back to the plugin
-    records = JSON.parse(response).records;
-    offset = JSON.parse(response).offset;
+    records = response.records;
+    offset = response.offset;
     // console.log(records); // debug
     addStrings(records);
 
@@ -152,12 +154,19 @@ const makeAirtableCall = (url: string) => {
 
     request.responseType = 'text';
     try {
+      console.log('sending request: ', request);
       request.send();
     } catch (error) {
+      console.log('caught error: ', error);
       return reject(error);
     }
     request.onload = () => {
       return resolve (request.response);
     }
   })
+}
+
+const handleBadResponse = (response) => {
+  console.log('Handling a bad response');
+  console.log(response);
 }
