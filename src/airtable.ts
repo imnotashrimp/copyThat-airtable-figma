@@ -63,7 +63,7 @@ const stringifyDatetime = () => {
   let timeString = addLeadingZero(currentDatetime.getHours())
     + ':' + addLeadingZero(currentDatetime.getMinutes());
 
-  return dateString + ' at ' + timeString;
+  return 'Last saved ' + dateString + ' at ' + timeString;
 }
 
 export const getStringsFromAirtable = async (airtableConfig, varNames) => {
