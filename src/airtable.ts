@@ -153,6 +153,16 @@ const makeAirtableCall = (url: string) => {
   return new Promise( (resolve, reject) => {
     var request = new XMLHttpRequest()
     request.open('GET', url);
+    setTimeout(() => {
+      console.log('timed out');
+      const timedOutMsg = {
+        error: {
+          type: 'REQUEST_TIMED_OUT'
+        }
+      };
+      // return resolve(timedOutMsg);
+      handleBadResponse(timedOutMsg);
+   }, 10000);
 
     request.responseType = 'text';
     try {
@@ -184,13 +194,14 @@ const handleBadResponse = (response) => {
     errorType = error.type;
   }
 
-  const msgPrepend = '⛔️ Sync failed. Please check the ';
-  const msgAppend = '. ⛔️';
+  const msgPrepend = '⛔️ Sync failed. ';
+  const msgAppend = ' ⛔️';
   const msgMap = {
-      BASE_ID_NOT_FOUND: 'Base ID'
-    , AUTHENTICATION_REQUIRED: 'Airtable API key'
-    , TABLE_NOT_FOUND: 'table name'
-    , UNKNOWN_FIELD_NAME: 'primary key or copy field names'
+      BASE_ID_NOT_FOUND: 'Check the Base ID.'
+    , AUTHENTICATION_REQUIRED: 'Check the Airtable API key.'
+    , TABLE_NOT_FOUND: 'Check the table name.'
+    , UNKNOWN_FIELD_NAME: 'Check the primary key or copy field names.'
+    , REQUEST_TIMED_OUT: 'Airtable didn\'t respond. Try again in a few moments.'
   }
 
   let msgToPlugin = {
