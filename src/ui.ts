@@ -95,7 +95,7 @@ document.getElementById('cancel').onclick = () => {
 function validateForm (keys) {
   var formIsValid = true;
   const isRequired = 'This is required';
-  const mainMsg = 'Please fix any issues';
+  const mainMsg = 'Please fix the issues in red and try again.';
 
   if (keys.apiKey === '') {
     formIsValid = false;
