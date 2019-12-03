@@ -44,6 +44,11 @@ async function replaceTheText (node: TextNode, airtableData: object) {
 const reportNodeName = 'copyThat.airtable.sync.report'
 
 export const createReportNode = async () => {
+  const existingNodes = figma.root.findAll(node => node.type === "TEXT" && node.name === reportNodeName) as TextNode[];
+  existingNodes.forEach(node => {
+    node.remove();
+  })
+
   // Create the node
   figma.createText().name = reportNodeName;
 
