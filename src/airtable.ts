@@ -121,6 +121,8 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
     var records: string;
     var response = JSON.parse(await makeAirtableCall(url) as string);
 
+    // If Airtable returned an error, this should kill the plugin and report it
+    // to the user
     handleBadResponse(response);
 
     // Amend the allStrings object, to be passed back to the plugin
@@ -167,6 +169,37 @@ const makeAirtableCall = (url: string) => {
 }
 
 const handleBadResponse = (response) => {
+  const error = response.error;
+  if (!error) return;
+
   console.log('Handling a bad response');
   console.log(response);
+  let errorType: string;
+
+  // If it's a bad Base ID, Airtable doesn't return the full object.
+  // This will handle that case.
+  if (error === "NOT_FOUND") {
+    errorType = 'BASE_ID_NOT_FOUND';
+  } else {
+    errorType = error.type;
+  }
+
+  const msgPrepend = '⛔️ Sync failed. Please check the ';
+  const msgAppend = '. ⛔️';
+  const msgMap = {
+      BASE_ID_NOT_FOUND: 'Base ID'
+    , AUTHENTICATION_REQUIRED: 'Airtable API key'
+    , TABLE_NOT_FOUND: 'table name'
+    , UNKNOWN_FIELD_NAME: 'primary key or copy field names'
+  }
+
+  let msgToPlugin = {
+    type: 'error',
+    error: {
+      type: errorType,
+      message: msgPrepend + msgMap[errorType] + msgAppend
+    }
+  }
+
+  parent.postMessage({ pluginMessage: msgToPlugin }, '*')
 }

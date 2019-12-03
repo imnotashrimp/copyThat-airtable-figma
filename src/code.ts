@@ -41,9 +41,14 @@ figma.ui.onmessage = async (msg) => {
     // console.log('Saved new airtable config: ', getAirtableConfig()); // debug
   }
 
-  if (msg.type = 'sync-airtable-strings') {
+  if (msg.type === 'sync-airtable-strings') {
     // console.log('Plugin received from UI: ', msg.strings); // debug
     replaceText(msg.strings);
+  }
+
+  if (msg.type === 'error') {
+    // console.log(msg.error.message);
+    figma.notify(msg.error.message, {timeout: 10000})
   }
 
   figma.closePlugin();
