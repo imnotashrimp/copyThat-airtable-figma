@@ -72,7 +72,7 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
     records.forEach((record) => {
 
       var key = record.fields[primaryKeyField];
-      var value = record.fields[theCopyField] || '!! UNDEFINED';
+      var value = record.fields[theCopyField] || '!! STRING IS EMPTY';
 
       if (!key) {
         return;
