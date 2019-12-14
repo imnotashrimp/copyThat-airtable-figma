@@ -45,9 +45,10 @@ if (figma.command === 'sync' ) {
     loadFonts.forEach(async (font) => await figma.loadFontAsync(font))
   }
 
-  loadTheFonts();
-  figma.showUI(__html__, { visible: false });
-  figma.ui.postMessage({ type: 'sync', airtableConfig, varNames });
+  Promise.all([loadTheFonts()]).then(() => {
+    figma.showUI(__html__, { visible: false });
+    figma.ui.postMessage({ type: 'sync', airtableConfig, varNames });
+  })
 }
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
