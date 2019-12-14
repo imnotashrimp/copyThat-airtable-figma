@@ -160,7 +160,6 @@ const makeAirtableCall = (url: string) => {
           type: 'REQUEST_TIMED_OUT'
         }
       };
-      // return resolve(timedOutMsg);
       handleBadResponse(timedOutMsg);
    }, 10000);
 

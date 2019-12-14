@@ -17,6 +17,7 @@
 import { getAirtableConfig, setAirtableConfig } from './airtable'
 import { isVar, getVarName } from './var-test'
 import { replaceText, createReportNode } from './replace-text'
+import { getNodeFonts } from './fonts'
 
 const airtableConfig = getAirtableConfig();
 
@@ -27,7 +28,8 @@ if (figma.command === 'config') {
 
 if (figma.command === 'sync' ) {
   // Initialize empty array for Airtable filter
-  var varNames = [];
+  let varNames = [];
+  let loadFonts = [];
 
   const nodes = figma.root.findAll(node => node.type === "TEXT");
 
@@ -35,14 +37,18 @@ if (figma.command === 'sync' ) {
   nodes.forEach(async (node: TextNode) => {
     if (!isVar(node.name)) return;
 
-    // console.log(node.name, ' is variable') // debug
+    getNodeFonts(node).forEach((font) => loadFonts.push(font))
     varNames.push(getVarName(node.name));
   });
 
-  // console.log(varNames); // debug
+  const loadTheFonts = async() => {
+    loadFonts.forEach(async (font) => await figma.loadFontAsync(font))
+  }
 
-  figma.showUI(__html__, { visible: false });
-  figma.ui.postMessage({ type: 'sync', airtableConfig, varNames });
+  Promise.all([loadTheFonts()]).then(() => {
+    figma.showUI(__html__, { visible: false });
+    figma.ui.postMessage({ type: 'sync', airtableConfig, varNames });
+  })
 }
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
