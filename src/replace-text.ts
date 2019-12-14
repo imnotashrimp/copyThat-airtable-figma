@@ -26,11 +26,14 @@ export const replaceText = (airtableData: object) => {
 
     // console.log(node.name + 'is a variable. Replacing text.')
     node.autoRename = false;
+    var pageName = getPage(node).name;
 
     if (node.hasMissingFont) {
+      console.info('Node has missing font:', pageName, '>', node.name)
       handleMissingFont(node);
       return;
     } else {
+      console.info('Replacing text:', pageName, '>', node.name)
       replaceTheText(node, airtableData);
     }
   });
@@ -41,14 +44,19 @@ function handleMissingFont (node: TextNode) {
   amendReportNode(node, 'MISSING_FONT');
 }
 
-async function replaceTheText (node: TextNode, airtableData: object) {
+const replaceTheText = async (node: TextNode, airtableData: object) => {
+  console.info('Original node.characters:', node.characters)
+
   // Figma requires this bit when replacing text
   await figma.loadFontAsync(node.fontName as FontName);
 
   // Replace the text in the node
   var str = airtableData[getVarName(node.name)]
   node.characters = str || '!! This string isn\'t in Airtable';
-  if (!str) amendReportNode(node, 'NOT_IN_AIRTABLE');
+  if (!str) {
+    console.warn(getVarName(node.name), 'not in airtable')
+    amendReportNode(node, 'NOT_IN_AIRTABLE')
+  }
   // console.log(airtableData[getVarName(node.name)]); // debug
   // console.log(node.name, 'variable name: ', getVarName(node.name)); // debug
 }
@@ -84,7 +92,7 @@ export const createReportNode = async () => {
 
 }
 
-const amendReportNode = (problematicNode, type: 'MISSING_FONT' | 'NOT_IN_AIRTABLE') => {
+const amendReportNode = (problematicNode: TextNode, type: 'MISSING_FONT' | 'NOT_IN_AIRTABLE') => {
   const msgMap = {
       MISSING_FONT: 'Missing font. Node not updated.'
     , NOT_IN_AIRTABLE: 'String wasn\'t found in Airtable.'
