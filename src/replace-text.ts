@@ -45,20 +45,18 @@ function handleMissingFont (node: TextNode) {
 }
 
 const replaceTheText = async (node: TextNode, airtableData: object) => {
-  console.info('Original node.characters:', node.characters)
-
-  // Figma requires this bit when replacing text
-  await figma.loadFontAsync(node.fontName as FontName);
-
-  // Replace the text in the node
-  var str = airtableData[getVarName(node.name)]
-  node.characters = str || '!! This string isn\'t in Airtable';
+  let str = airtableData[getVarName(node.name)]
   if (!str) {
     console.warn(getVarName(node.name), 'not in airtable')
     amendReportNode(node, 'NOT_IN_AIRTABLE')
   }
-  // console.log(airtableData[getVarName(node.name)]); // debug
-  // console.log(node.name, 'variable name: ', getVarName(node.name)); // debug
+  console.info('Original: "' + node.characters + '", New: "' + str + '"')
+
+  // Figma requires this bit when replacing text
+  // await figma.loadFontAsync(node.fontName as FontName);
+
+  // Replace the text in the node
+  node.characters = str || '!! This string isn\'t in Airtable';
 }
 
 /**
