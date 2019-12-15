@@ -54,6 +54,9 @@ const replaceTheText = async (node: TextNode, airtableData: object) => {
   }
   console.info('  Original: "' + node.characters + '", New: "' + str + '"')
 
+  // Set node font to first character's style
+  node.setRangeFontName(0, node.characters.length, node.getRangeFontName(0,1) as FontName)
+
   // Replace the text in the node
   node.characters = str || '!! This string isn\'t in Airtable';
 }
