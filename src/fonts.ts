@@ -31,5 +31,36 @@ const getMixedNodeFonts = (node: TextNode) => {
 }
 
 export const loadFontList = async(fontList: FontName[]) => {
-  fontList.forEach(async (font) => await figma.loadFontAsync(font))
+  let fontFamilies: string[] = []
+  let fontsToLoad: FontName[] = []
+
+  // Get list of fontNames (strip object down to font)
+  fontList.forEach(font => fontFamilies.push(font['family']))
+
+  // Dedupe
+  let uniqueFontFamilies = [...new Set(fontFamilies)]
+
+  // Add regular, bold, italic versions
+  uniqueFontFamilies.forEach(fontFamily => fontsToLoad.push(
+    {
+      family: fontFamily,
+      style: 'Regular'
+    },
+    {
+      family: fontFamily,
+      style: 'Bold'
+    },
+    {
+      family: fontFamily,
+      style: 'Italic'
+    },
+    {
+      family: fontFamily,
+      style: 'Bold Italic'
+    }
+  ))
+
+  // Load the fonts
+  console.log('Loading fonts:', fontsToLoad)
+  return fontsToLoad.forEach(async (font) => await figma.loadFontAsync(font))
 }

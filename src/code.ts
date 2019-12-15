@@ -29,7 +29,7 @@ if (figma.command === 'config') {
 if (figma.command === 'sync' ) {
   // Initialize empty array for Airtable filter
   let varNames = [];
-  let loadFonts: FontName[] = [];
+  let fontsToLoad: FontName[] = [];
 
   const nodes = figma.root.findAll(node => node.type === "TEXT");
   createReportNode();
@@ -38,11 +38,11 @@ if (figma.command === 'sync' ) {
   nodes.forEach(async (node: TextNode) => {
     if (!isVar(node.name)) return;
 
-    getNodeFonts(node).forEach((font) => loadFonts.push(font))
+    getNodeFonts(node).forEach((font) => fontsToLoad.push(font))
     varNames.push(getVarName(node.name));
   });
 
-  Promise.all([loadFontList(loadFonts)]).then(() => {
+  Promise.all([loadFontList(fontsToLoad)]).then(() => {
     figma.showUI(__html__, { visible: false });
     figma.ui.postMessage({ type: 'sync', airtableConfig, varNames });
   })
