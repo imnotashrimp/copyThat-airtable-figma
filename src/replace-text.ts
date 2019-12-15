@@ -29,7 +29,7 @@ export const replaceText = (airtableData: object) => {
     var pageName = getPage(node).name;
 
     if (node.hasMissingFont) {
-      console.info('Node has missing font:', pageName, '>', node.name)
+      console.info('Node has missing font. Not replacing:', pageName, '>', node.name)
       handleMissingFont(node);
       return;
     } else {
