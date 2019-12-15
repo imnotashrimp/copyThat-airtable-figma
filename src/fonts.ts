@@ -29,3 +29,7 @@ const getMixedNodeFonts = (node: TextNode) => {
   }
   return fonts
 }
+
+export const loadFontList = async(fontList: FontName[]) => {
+  fontList.forEach(async (font) => await figma.loadFontAsync(font))
+}

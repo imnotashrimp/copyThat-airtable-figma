@@ -17,7 +17,7 @@
 import { getAirtableConfig, setAirtableConfig } from './airtable'
 import { isVar, getVarName } from './var-test'
 import { replaceText, createReportNode } from './replace-text'
-import { getNodeFonts } from './fonts'
+import { getNodeFonts, loadFontList } from './fonts'
 
 const airtableConfig = getAirtableConfig();
 
@@ -29,7 +29,7 @@ if (figma.command === 'config') {
 if (figma.command === 'sync' ) {
   // Initialize empty array for Airtable filter
   let varNames = [];
-  let loadFonts = [];
+  let loadFonts: FontName[] = [];
 
   const nodes = figma.root.findAll(node => node.type === "TEXT");
   createReportNode();
@@ -42,11 +42,7 @@ if (figma.command === 'sync' ) {
     varNames.push(getVarName(node.name));
   });
 
-  const loadTheFonts = async() => {
-    loadFonts.forEach(async (font) => await figma.loadFontAsync(font))
-  }
-
-  Promise.all([loadTheFonts()]).then(() => {
+  Promise.all([loadFontList(loadFonts)]).then(() => {
     figma.showUI(__html__, { visible: false });
     figma.ui.postMessage({ type: 'sync', airtableConfig, varNames });
   })
