@@ -32,6 +32,7 @@ if (figma.command === 'sync' ) {
   let loadFonts = [];
 
   const nodes = figma.root.findAll(node => node.type === "TEXT");
+  createReportNode();
 
   // Add variable name to varNames array
   nodes.forEach(async (node: TextNode) => {
@@ -65,7 +66,6 @@ figma.ui.onmessage = async (msg) => {
 
   if (msg.type === 'sync-airtable-strings') {
     // console.log('Plugin received from UI: ', msg.strings); // debug
-    createReportNode();
     replaceText(msg.strings);
   }
 

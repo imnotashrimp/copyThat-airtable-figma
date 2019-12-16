@@ -90,8 +90,9 @@ export const createReportNode = async () => {
 
 }
 
-const amendReportNode = (problematicNode: TextNode, type: 'MISSING_FONT' | 'NOT_IN_AIRTABLE') => {
+const amendReportNode = (problematicNode: TextNode, type: 'MISSING_FONT' | 'NOT_IN_AIRTABLE' | 'JUST_TESTING') => {
   const msgMap = {
+      JUST_TESTING: 'Just testing to see if this works. Nothing to see here.',
       MISSING_FONT: 'Missing font. Node not updated.'
     , NOT_IN_AIRTABLE: 'String wasn\'t found in Airtable.'
   }
