@@ -16,6 +16,7 @@
 
 import { getVarName, isVar } from './var-test'
 import { stringifyDatetime } from './date-time'
+import { getFormatting } from './format-text'
 
 export const replaceText = (airtableData: object) => {
   // console.log(airtableData); // debug
@@ -56,6 +57,10 @@ const replaceTheText = async (node: TextNode, airtableData: object) => {
 
   // Set node font to first character's style
   node.setRangeFontName(0, node.characters.length, node.getRangeFontName(0,1) as FontName)
+
+  // Apply formatting to the string
+  let formatting = getFormatting(str)
+  console.log('formatting:', formatting)
 
   // Replace the text in the node
   node.characters = str || '!! This string isn\'t in Airtable';
