@@ -10,6 +10,11 @@ Now you can sync strings from Airtable to your Figma designs.
 3. [How to use it](#how-to-use-it)
 4. [Contributing to the project (Spoiler: You don't have to code!)](#contributing-to-the-project-spoiler-you-dont-have-to-code)
 
+### Noteworthy bits of information
+
+* [Node names and their effect on your sanity](#node-names-and-their-effect-on-your-sanity)
+* [Styling your copy](#styling-your-copy)
+
 ## Setting up Airtable
 
 First things first. You'll need to have an Airtable base to grab the copy from.
@@ -71,7 +76,7 @@ If it can't find a matching key in your base, you'll see a message in the corres
 
 The key needs to be an exact match between the node title and your Airtable base.
 
-#### Keeping text node names valid
+#### Node names and their effect on your sanity
 
 Text nodes with these names will be synced:
 
@@ -80,10 +85,18 @@ Text nodes with these names will be synced:
 
 Careful, though: Make sure the node name has one set of braces only.
 
-These might give you the wrong results:
+These might give you results you didn't want:
 
 * `{{two sets}} {{of braces}}` will sync with the key `two sets`
 * `{{a set of {{nested}} braces}}` will sync with the key `a set of {{nested`
+
+#### Styling your copy
+
+There a few things you need to keep in mind with this plugin.
+
+First: You're replacing entire contents of a text node, **including styles**. {{copyThat.airtable}} applies the first character's style to the entire node. In most cases, this will probably be regular text. But if you want an entire node to be italicized? Just italicize (at least) the first character, and the entire node will adopt that style.
+
+Second: The plugin supports bold, italic, and bold-italic formatting with HTML tags. So if you surround text with `<b></b>`, `<i></i>`, or `<b><i></i></b>` tags, they'll render appropriately. I plan to add markdown support in the future.
 
 ### 3. Sync
 
