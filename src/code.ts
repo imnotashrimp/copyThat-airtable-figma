@@ -31,10 +31,13 @@ if (figma.command === 'sync' ) {
   let varNames = [];
   let fontsToLoad: FontName[] = [];
 
+  // Find all text nodes
   const nodes = figma.root.findAll(node => node.type === "TEXT");
+
+  // Delete the old report node (if it's there), and make a new one
   createReportNode();
 
-  // Add variable name to varNames array
+  // If variable is found in node name, add to varNames array
   nodes.forEach(async (node: TextNode) => {
     if (!isVar(node.name)) return;
 
@@ -42,6 +45,7 @@ if (figma.command === 'sync' ) {
     varNames.push(getVarName(node.name));
   });
 
+  // Continue only after the fonts load
   Promise.all([loadFontList(fontsToLoad)]).then(() => {
     figma.showUI(__html__, { visible: false });
     figma.ui.postMessage({ type: 'sync', airtableConfig, varNames });
@@ -52,22 +56,19 @@ if (figma.command === 'sync' ) {
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 figma.ui.onmessage = async (msg) => {
-  // console.log(msg) // debug
 
+  // Triggers if user clicks 'save' button in the UI
   if (msg.type === 'save-airtable-config') {
     const keys = msg.keys;
     setAirtableConfig(keys.apiKey, keys.baseId, keys.tableName, keys.primaryKeyField, keys.theCopyField)
-    // console.log('Saved new airtable config: ', getAirtableConfig()); // debug
   }
 
   if (msg.type === 'sync-airtable-strings') {
-    // console.log('Plugin received from UI: ', msg.strings); // debug
     replaceText(msg.strings);
   }
 
   if (msg.type === 'error') {
-    // console.log(msg.error.message);
-    figma.notify(msg.error.message, {timeout: 10000})
+    figma.notify(msg.error.message, { timeout: 10000 })
   }
 
   figma.closePlugin();
