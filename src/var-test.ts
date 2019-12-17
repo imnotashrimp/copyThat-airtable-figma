@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-const variablePattern = /(?:.*\{{2})(.+)(?:\}{2}.*)/;
+const variablePattern = /(?:\{{2})(.+?)(?:\}{2})/
 
 export const isVar = (testString: string) => {
   // If input string is a variable, return `true`
@@ -22,5 +22,5 @@ export const isVar = (testString: string) => {
 }
 
 export const getVarName = (testString: string) => {
-  return testString.replace(variablePattern, '$1');
+  return testString.match(variablePattern)[1]
 }
