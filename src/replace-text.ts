@@ -16,7 +16,7 @@
 
 import { getVarName, isVar } from './var-test'
 import { stringifyDatetime } from './date-time'
-import { getFormatting } from './format-text'
+import { formatNode } from './format-text'
 
 export const replaceText = (airtableData: object) => {
   // console.log(airtableData); // debug
@@ -52,18 +52,22 @@ const replaceTheText = async (node: TextNode, airtableData: object) => {
   if (!str) {
     console.warn(getVarName(node.name), 'not in airtable')
     amendReportNode(node, 'NOT_IN_AIRTABLE')
+    node.characters = '!! This string isn\'t in Airtable'
+    return
   }
+
   console.info('  Original: "' + node.characters + '", New: "' + str + '"')
 
-  // Set node font to first character's style
-  node.setRangeFontName(0, node.characters.length, node.getRangeFontName(0,1) as FontName)
+  // Get fontName of first character
+  let firstCharFontName = node.getRangeFontName(0,1) as FontName
+  // Get font family for the node
+  let fontFamily = firstCharFontName.family
 
-  // Apply formatting to the string
-  let formatting = getFormatting(str)
-  console.log('formatting:', formatting)
+  // Apply font to the entire node
+  node.setRangeFontName(0, node.characters.length, firstCharFontName)
 
-  // Replace the text in the node
-  node.characters = str || '!! This string isn\'t in Airtable';
+  // Replace the node and apply formatting
+  str = formatNode(node, str, fontFamily)
 }
 
 /**
@@ -117,3 +121,4 @@ const getPage = (node) => {
   while (node && node.type !== 'PAGE') { node = node.parent; }
   return node;
 }
+

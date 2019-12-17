@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 const inlineStyles = {
-  boldItal: {
+  boldItalic: {
     htmlPattern: /(?:<[bi]>){2}(.+?)(?:<\/[bi]>){2}/g,
     code: 'bi'
   },
@@ -23,7 +23,7 @@ const inlineStyles = {
     htmlPattern: /(?:<b>)(.+?)(?:<\/b>)/g,
     code: 'b',
   },
-  ital: {
+  italic: {
     htmlPattern: /(?:<i>)(.+?)(?:<\/i>)/g,
     code: 'i'
   }
@@ -35,15 +35,62 @@ const styleMap = {
   bi: 'Bold Italic'
 }
 
-export const getFormatting = (str: string) => {
+interface FormatInstruction {
+  index: number,
+  length: number,
+  style: string
+}
+
+const getFormatting = (str: string) => {
   Object.keys(inlineStyles).forEach((k) => {
     let key = inlineStyles[k]
     str = str.replace(key.htmlPattern, (match, $1) => {
       let innerHtml = $1 as string
-      let len = innerHtml.length
-      return `{%${key.code},${len}%}${innerHtml}`
+      return `{%${key.code}||${innerHtml}%}`
     })
   })
 
   return str
+}
+
+/**
+ * Apply formatting
+ */
+
+export const formatNode = (
+  node: TextNode,
+  str: string,
+  fontFamily: string
+) => {
+  const capturePattern = /{%(\w+)\|{2}(.+?)%}/
+  let formatInstructions: FormatInstruction[] = []
+  str = getFormatting(str)
+
+  // read all strings with formatting instructions
+  // and store those instructions in formatInstructions array
+  let result
+  while (result = capturePattern.exec(str)) {
+    let theString = result[2]
+    formatInstructions.push({
+      index: result.index,
+      length: theString.length,
+      style: styleMap[result[1]]
+    })
+
+    // redefine string to remove the match we just read
+    str = str.replace(capturePattern, theString)
+  }
+
+  console.log('Node formatInstructions:', formatInstructions)
+  // Replace the text in the node
+  node.characters = str
+
+  // now go through and format it
+  formatInstructions.forEach((item) => {
+    node.setRangeFontName(
+      item.index,
+      item.index + item.length,
+      { family: fontFamily, style: item.style }
+    )
+  })
 }
