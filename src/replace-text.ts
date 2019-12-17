@@ -16,6 +16,7 @@
 
 import { getVarName, isVar } from './var-test'
 import { stringifyDatetime } from './date-time'
+import { formatNode } from './format-text'
 
 export const replaceText = (airtableData: object) => {
   // console.log(airtableData); // debug
@@ -29,7 +30,7 @@ export const replaceText = (airtableData: object) => {
     var pageName = getPage(node).name;
 
     if (node.hasMissingFont) {
-      console.info('Node has missing font:', pageName, '>', node.name)
+      console.info('Node has missing font. Not replacing:', pageName, '>', node.name)
       handleMissingFont(node);
       return;
     } else {
@@ -46,17 +47,27 @@ function handleMissingFont (node: TextNode) {
 
 const replaceTheText = async (node: TextNode, airtableData: object) => {
   let str = airtableData[getVarName(node.name)]
+
+  // Handle a string that wasn't found in Airtable
   if (!str) {
     console.warn(getVarName(node.name), 'not in airtable')
     amendReportNode(node, 'NOT_IN_AIRTABLE')
+    node.characters = '!! This string isn\'t in Airtable'
+    return
   }
-  console.info('Original: "' + node.characters + '", New: "' + str + '"')
 
-  // Figma requires this bit when replacing text
-  // await figma.loadFontAsync(node.fontName as FontName);
+  console.info('  Original: "' + node.characters + '", New: "' + str + '"')
 
-  // Replace the text in the node
-  node.characters = str || '!! This string isn\'t in Airtable';
+  // Get fontName of first character
+  let firstCharFontName = node.getRangeFontName(0,1) as FontName
+  // Get font family for the node
+  let fontFamily = firstCharFontName.family
+
+  // Apply font to the entire node
+  node.setRangeFontName(0, node.characters.length, firstCharFontName)
+
+  // Replace the node and apply formatting
+  str = formatNode(node, str, fontFamily)
 }
 
 /**
@@ -110,3 +121,4 @@ const getPage = (node) => {
   while (node && node.type !== 'PAGE') { node = node.parent; }
   return node;
 }
+

@@ -1,7 +1,19 @@
-# {{copyThat.airtable}} Figma plugin
+# {{copyThat.airtable}}, a Figma plugin
 
 Writers rejoice!
 Now you can sync strings from Airtable to your Figma designs.
+
+## Contents
+
+1. [Setting up Airtable](#setting-up-airtable)
+2. [Installing the plugin](#installing-the-plugin)
+3. [How to use it](#how-to-use-it)
+4. [Contributing to the project (Spoiler: You don't have to code!)](#contributing-to-the-project-spoiler-you-dont-have-to-code)
+
+### Noteworthy bits of information
+
+* [Node names and their effect on your sanity](#node-names-and-their-effect-on-your-sanity)
+* [Styling your copy](#styling-your-copy)
 
 ## Setting up Airtable
 
@@ -29,26 +41,26 @@ Some easy ways you can make this happen:
 If there are duplicates in the key field, all matching results will be returned, and the plugin will use whichever it comes across first. As of v1, the plugin won't catch this as an error.
 </td></table>
 
-## Installation
+## Installing the plugin
 
-In the Figma desktop app menu, select **Plugins > Manage Plugins...**, and then click **Browse all plugins**.
+You can install the plugin [directly in Figma](https://www.figma.com/c/plugin/782185813336691466/).
 
-Find _{{copyThat.airtable}}_ and install it.
+If you're digging it, click the ♥ and give it some love. 🙂
 
-## Usage
+## How to use it
 
 ### 1. Configure
 
 In the Figma menu, select **Plugins > {{copyThat.airtable}} > Configure...**.
 
 <table><td>
-<strong>Note</strong>:
-As of v1, this configuration is stored with each design. I plan to have a way to sync this information between designs in a future release.
+<strong>Roadmap note</strong>:
+For now, this configuration is stored with each design — which means you'll need to copy-paste to each design. I plan to have a way to sync this information between designs in a future release.
 </td></table>
 
 #### Security and your API key
 
-As of v1 of this plugin, the API key has the same permissions as the user who created it. Airtable does not have a way to scope API key permissions. This means if you're a Base owner, your API key can add, remove, and delete records and fields.
+The Airtable API key has the same permissions as the user who created it. Airtable doesn't have a way to scope API key permissions. If you're a Base owner, your API key can add, remove, and delete records and fields.
 
 Obviously, this isn't good security.
 
@@ -56,15 +68,15 @@ A secure workaround: **Make a dedicated read-only user for this plugin, and use 
 
 ### 2. Make variables in your design
 
-copyThat.airtable will synchronize all text fields that contain a double set of curly braces.
+{{copyThat.airtable}} will synchronize all text fields that contain a double set of curly braces — `{{like this}}`.
 
 When the plugin runs, it compares the `{{key}}` found in the node name to keys in your Airtable base.
 
-If it can't find a matching key in your base, you'll see a message in the node so you can troubleshoot.
+If it can't find a matching key in your base, you'll see a message in the corresponding node so you can troubleshoot.
 
 The key needs to be an exact match between the node title and your Airtable base.
 
-#### Keeping text node names valid
+#### Node names and their effect on your sanity
 
 Text nodes with these names will be synced:
 
@@ -73,34 +85,45 @@ Text nodes with these names will be synced:
 
 Careful, though: Make sure the node name has one set of braces only.
 
-These might give you the wrong results:
+These might give you results you didn't want:
 
 * `{{two sets}} {{of braces}}` will sync with the key `two sets`
 * `{{a set of {{nested}} braces}}` will sync with the key `a set of {{nested`
 
+#### Styling your copy
+
+There a few things you need to keep in mind with this plugin.
+
+First: You're replacing entire contents of a text node, **including styles**. {{copyThat.airtable}} applies the first character's style to the entire node. In most cases, this will probably be regular text. But if you want an entire node to be italicized? Just italicize (at least) the first character, and the entire node will adopt that style.
+
+Second: The plugin supports bold, italic, and bold-italic formatting with HTML tags. So if you surround text with `<b></b>`, `<i></i>`, or `<b><i></i></b>` tags, they'll render appropriately. I plan to add markdown support in the future.
+
 ### 3. Sync
 
-In the Figma menu, select **Plugins > {{copyThat.airtable}} > Sync all copy**.
+In the Figma menu, select **Plugins > {{copyThat.airtable}} > Sync all the copy!**.
 
 <table><td>
 <strong>Important</strong>:
-copyThat.airtable updates all text nodes with variable names, everywhere in the design. Always double-check the results,
-and undo the sync if something went wrong.
+{{copyThat.airtable}} updates all text nodes with variable names, everywhere in the design. Always double-check the results. You can undo the sync if something went wrong.
 </td></table>
 
-## Contributions
+## Contributing to the project (Spoiler: You don't have to code!)
 
-v1 of the plugin is largely my own use case, with some flexibility so that others can use it.
+The plugin is largely my own use case, with some flexibility so that others can use it.
 
 If you have feature requests or notes on your use case, feel free to [join the discussion on an issue](https://github.com/imnotashrimp/figma-plugin-airtable-cms/issues/) or open a new issue.
 
-Pull requests are also welcome, whether they're new or improved functionality, optimized code, or better documentation.
+Pull requests are also welcome, whether they're new or improved features, better code, fixed bugs, or revised documentation.
 
-### Running locally
+### Help steer the roadmap
 
-Figma recommends writing plugins in TypeScript. I found it easy enough to learn.
+Take a look a the [open issues](https://github.com/imnotashrimp/copyThat.airtable-figma/issues) and [milestones](https://github.com/imnotashrimp/copyThat.airtable-figma/milestones).
 
-If you're not familiar with TypeScript, you can learn about it at https://www.typescriptlang.org/.
+Weigh in and help drive the future of the plugin! If you're feeling comfortable enough to code, I'd love your contributions.
+
+### Contributing code
+
+I learned TypeScript for this project, so I'm _sure_ you can find a way to improve the code.
 
 #### To develop & run the plugin
 
@@ -114,8 +137,8 @@ Figma Desktop (this won't work in your browser)
 ##### 1. Open this repo in Visual Studio Code
 
 ```shell
-git clone https://github.com/imnotashrimp/figma-plugin-airtable-cms.git
-code figma-plugin-airtable-cms
+git clone https://github.com/imnotashrimp/copyThat-airtable-figma.git
+code copyThat-airtable-figma
 ```
 
 ##### 2. Install TypeScript & other dependencies
@@ -140,7 +163,3 @@ Keep the plugin running in the background so you can develop & test in Figma.
 Open Figma Desktop. In the menu, select **Plugins > Development > New Plugin...**. Click the button under **Link existing plugin**, and select `manifest.json` from this project.
 
 After that, you can use the plugin under the **Plugins > Development** menu.
-
-## Roadmap
-
-Find the v1 release roadmap [here](https://github.com/imnotashrimp/figma-plugin-airtable-cms/milestone/1).
