@@ -92,11 +92,12 @@ These might give you results you didn't want:
 
 #### Styling your copy
 
-There a few things you need to keep in mind with this plugin.
+<!-- There a few things you need to keep in mind with this plugin. -->
 
-First: You're replacing entire contents of a text node, **including styles**. {{copyThat.airtable}} applies the first character's style to the entire node. In most cases, this will probably be regular text. But if you want an entire node to be italicized? Just italicize (at least) the first character, and the entire node will adopt that style.
+<!-- First: -->
+You're replacing entire contents of a text node, **including styles**. {{copyThat.airtable}} applies the first character's style to the entire node. In most cases, this will probably be regular text. But if you want an entire node to be italicized? Just italicize (at least) the first character, and the entire node will adopt that style.
 
-Second: The plugin supports bold, italic, and bold-italic formatting with HTML tags. So if you surround text with `<b></b>`, `<i></i>`, or `<b><i></i></b>` tags, they'll render appropriately. I plan to add markdown support in the future.
+<!-- Second: The plugin supports bold, italic, and bold-italic formatting with HTML tags. So if you surround text with `<b></b>`, `<i></i>`, or `<b><i></i></b>` tags, they'll render appropriately. I plan to add markdown support in the future. -->
 
 ### 3. Sync
 

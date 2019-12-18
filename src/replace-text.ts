@@ -67,7 +67,10 @@ const replaceTheText = async (node: TextNode, airtableData: object) => {
   node.setRangeFontName(0, node.characters.length, firstCharFontName)
 
   // Replace the node and apply formatting
-  str = formatNode(node, str, fontFamily)
+  // formatNode(node, str, fontFamily) // TODO debug this
+
+  // Replace the node
+  node.characters = str
 }
 
 /**
@@ -121,4 +124,3 @@ const getPage = (node) => {
   while (node && node.type !== 'PAGE') { node = node.parent; }
   return node;
 }
-
