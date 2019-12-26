@@ -29,36 +29,33 @@ const getMixedNodeFonts = (node: TextNode) => {
 }
 
 export const loadFontList = async(fontList: FontName[]) => {
+  console.info('Raw font list, before deduping:', fontList)
   let fontFamilies: string[] = []
-  let fontsToLoad: FontName[] = []
+  let fontStyles: string[] = []
+  let uniqueFontsToLoad: FontName[] = []
 
-  // Get list of fontNames (strip object down to font)
-  fontList.forEach(font => fontFamilies.push(font['family']))
+  // Get list of font names & styles
+  fontList.forEach(font => {
+    fontFamilies.push(font['family'])
+    fontStyles.push(font['style'])
+  })
 
-  // Dedupe
+  // Get font families
   let uniqueFontFamilies = [...new Set(fontFamilies)]
 
-  // Add regular, bold, italic versions
-  uniqueFontFamilies.forEach(fontFamily => fontsToLoad.push(
-    {
-      family: fontFamily,
-      style: 'Regular'
-    },
-    {
-      family: fontFamily,
-      style: 'Bold'
-    },
-    {
-      family: fontFamily,
-      style: 'Italic'
-    },
-    {
-      family: fontFamily,
-      style: 'Bold Italic'
-    }
-  ))
+  // Get font styles
+  let uniqueFontStyles = [...new Set(fontStyles)]
+
+  // Generate array of uniques
+  uniqueFontFamilies.forEach(family =>
+    uniqueFontStyles.forEach(style =>
+      uniqueFontsToLoad.push(
+        { family: family, style: style }
+      )
+    )
+  )
 
   // Load the fonts
-  console.log('Loading fonts:', fontsToLoad)
-  return fontsToLoad.forEach(async (font) => await figma.loadFontAsync(font))
+  console.log('Deduped font list:', uniqueFontsToLoad)
+  return uniqueFontsToLoad.forEach(async (font) => await figma.loadFontAsync(font))
 }
