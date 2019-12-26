@@ -16,9 +16,7 @@
 
 export const getNodeFonts = (node: TextNode) => {
   let fontName = node.fontName
-  return fontName === figma.mixed
-    ? getMixedNodeFonts(node)
-    : [fontName]
+  return fontName === figma.mixed ? getMixedNodeFonts(node) : [fontName]
 }
 
 const getMixedNodeFonts = (node: TextNode) => {
