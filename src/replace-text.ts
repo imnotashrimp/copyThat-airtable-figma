@@ -27,31 +27,32 @@ export const replaceText = (airtableData: object) => {
 
     // console.log(node.name + 'is a variable. Replacing text.')
     node.autoRename = false
-    var pageName = getPage(node).name
+    let nodeHierarchy = getNodeHierarchy(node)
 
     if (node.hasMissingFont) {
-      console.info('Node has missing font. Not replacing:', pageName, '>', node.name)
-      handleMissingFont(node)
+      console.info(`Node has missing font. Not replacing ${nodeHierarchy}`)
+      handleMissingFont(node, nodeHierarchy)
       return
-    } else {
-      console.info('Replacing text:', pageName, '>', node.name)
-      replaceTheText(node, airtableData)
     }
+
+    console.info(`Replacing text in ${nodeHierarchy}`)
+    replaceTheText(node, nodeHierarchy, airtableData)
   })
 }
 
-function handleMissingFont (node: TextNode) {
-  console.log('There are missing fonts. Not updating ', node.name, '.')
-  amendReportNode(node, 'MISSING_FONT')
+function handleMissingFont (node: TextNode, nodeHierarchy: string) {
+  console.log(`Missing fonts. Not updating ${nodeHierarchy}.`)
+  amendReportNode(node, nodeHierarchy, 'MISSING_FONT')
 }
 
-const replaceTheText = async (node: TextNode, airtableData: object) => {
+const replaceTheText = async (node: TextNode, nodeHierarchy: string, airtableData: object) => {
+  console.info(`  Called replaceTheText for ${nodeHierarchy}.`)
   let str = airtableData[getVarName(node.name)]
 
   // Handle a string that wasn't found in Airtable
   if (!str) {
     console.warn(getVarName(node.name), 'not in airtable')
-    amendReportNode(node, 'NOT_IN_AIRTABLE')
+    amendReportNode(node, nodeHierarchy, 'NOT_IN_AIRTABLE')
     node.characters = `!! This string isn't in Airtable`
     return
   }
@@ -68,9 +69,10 @@ const replaceTheText = async (node: TextNode, airtableData: object) => {
   // formatNode(node, str, fontFamily) // TODO debug this
 
   // Replace the node
-  console.info('  Original: "' + node.characters + '", New: "' + str + '"')
+  console.info(`  Original: '${node.characters}' , New: '${str}'`)
   node.characters = str
-  console.info('  In the node after replace:', node.characters)
+  console.info(`  In the node after replace: '${node.characters}'`)
+  return
 }
 
 /**
@@ -105,25 +107,27 @@ export const createReportNode = async () => {
 
 }
 
-const amendReportNode = (problematicNode: TextNode, type: 'MISSING_FONT' | 'NOT_IN_AIRTABLE' | 'JUST_TESTING') => {
+const amendReportNode = (problematicNode: TextNode, nodeHierarchy: string, type: 'MISSING_FONT' | 'NOT_IN_AIRTABLE' | 'JUST_TESTING') => {
   const msgMap = {
       JUST_TESTING: 'Just testing to see if this works. Nothing to see here.',
       MISSING_FONT: 'Missing font. Node not updated.'
     , NOT_IN_AIRTABLE: 'String wasn\'t found in Airtable.'
   }
 
-  let pageName = getPage(problematicNode).name
-  let nodeName = problematicNode.name
   let msg = msgMap[type]
 
   const reportNode = figma.currentPage.findOne(
     node => node.type === "TEXT" && node.name === reportNodeName
   ) as TextNode
-  reportNode.characters += '\n' + pageName + ' > ' + nodeName + ' — ' + msg
+  reportNode.characters += `\n ${nodeHierarchy} — ${msg}`
 }
 
-const getPage = (node) => {
-  // Returns the name of the page where the node is
-  while (node && node.type !== 'PAGE') { node = node.parent }
-  return node
+const getNodeHierarchy = (node) => {
+  let hierarchy: string[] = [node.name]
+  while (node && node.type !== 'PAGE') {
+     node = node.parent // Move up 1 level
+     hierarchy.unshift(node.name) // Add node name to beginning of array
+  }
+
+  return `"${hierarchy.join(' ▹ ')}"`
 }
