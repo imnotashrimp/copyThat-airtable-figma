@@ -52,11 +52,9 @@ const replaceTheText = async (node: TextNode, airtableData: object) => {
   if (!str) {
     console.warn(getVarName(node.name), 'not in airtable')
     amendReportNode(node, 'NOT_IN_AIRTABLE')
-    node.characters = '!! This string isn\'t in Airtable'
+    node.characters = `!! This string isn't in Airtable`
     return
   }
-
-  console.info('  Original: "' + node.characters + '", New: "' + str + '"')
 
   // Get fontName of first character
   let firstCharFontName = node.getRangeFontName(0,1) as FontName
@@ -70,7 +68,9 @@ const replaceTheText = async (node: TextNode, airtableData: object) => {
   // formatNode(node, str, fontFamily) // TODO debug this
 
   // Replace the node
+  console.info('  Original: "' + node.characters + '", New: "' + str + '"')
   node.characters = str
+  console.info('  In the node after replace:', node.characters)
 }
 
 /**

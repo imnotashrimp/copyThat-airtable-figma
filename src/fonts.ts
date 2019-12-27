@@ -16,9 +16,7 @@
 
 export const getNodeFonts = (node: TextNode) => {
   let fontName = node.fontName
-  return fontName === figma.mixed
-    ? getMixedNodeFonts(node)
-    : [fontName]
+  return fontName === figma.mixed ? getMixedNodeFonts(node) : [fontName]
 }
 
 const getMixedNodeFonts = (node: TextNode) => {
@@ -30,37 +28,40 @@ const getMixedNodeFonts = (node: TextNode) => {
   return fonts
 }
 
+// Dedupe the fonts
 export const loadFontList = async(fontList: FontName[]) => {
-  let fontFamilies: string[] = []
-  let fontsToLoad: FontName[] = []
+  console.info('Raw font list, before deduping:', fontList)
+  let uniqueFontsToLoad: FontName[] = []
 
-  // Get list of fontNames (strip object down to font)
-  fontList.forEach(font => fontFamilies.push(font['family']))
+  // FUTURE WORK: When supporting HTML and markdown styling, add bold, italic,
+  // & bold italic to the list
 
-  // Dedupe
-  let uniqueFontFamilies = [...new Set(fontFamilies)]
+  // Dedupe the font list so load times are quicker
+  fontList.forEach(font => {
+    if (isFontDupe(font, uniqueFontsToLoad) === false)
+      uniqueFontsToLoad.push(font) // If it's unique, add to uniqueFontsToLoad
+  })
 
-  // Add regular, bold, italic versions
-  uniqueFontFamilies.forEach(fontFamily => fontsToLoad.push(
-    {
-      family: fontFamily,
-      style: 'Regular'
-    },
-    {
-      family: fontFamily,
-      style: 'Bold'
-    },
-    {
-      family: fontFamily,
-      style: 'Italic'
-    },
-    {
-      family: fontFamily,
-      style: 'Bold Italic'
-    }
-  ))
 
   // Load the fonts
-  console.log('Loading fonts:', fontsToLoad)
-  return fontsToLoad.forEach(async (font) => await figma.loadFontAsync(font))
+  console.log('Deduped font list:', uniqueFontsToLoad)
+  return fontList.forEach(async (font) => await figma.loadFontAsync(font))
+}
+
+const isFontDupe = (thisFont: FontName, comparisonFontList: FontName[]) => {
+  let isDupe = false // Assume font is NOT a dupe
+  let fontAFamily = thisFont.family
+  let fontAStyle = thisFont.style
+
+  // Compare this font against the list
+  comparisonFontList.forEach(comparisonFont => {
+    let fontBFamily = comparisonFont.family
+    let fontBStyle = comparisonFont.style
+
+    // If font family & style match, this is a dupe
+    if (fontAFamily === fontBFamily && fontAStyle === fontBStyle)
+      isDupe = true
+  })
+
+  return isDupe
 }
