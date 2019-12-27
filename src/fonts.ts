@@ -28,34 +28,40 @@ const getMixedNodeFonts = (node: TextNode) => {
   return fonts
 }
 
+// Dedupe the fonts
 export const loadFontList = async(fontList: FontName[]) => {
   console.info('Raw font list, before deduping:', fontList)
-  let fontFamilies: string[] = []
-  let fontStyles: string[] = []
   let uniqueFontsToLoad: FontName[] = []
 
-  // Get list of font names & styles
+  // FUTURE WORK: When supporting HTML and markdown styling, add bold, italic,
+  // & bold italic to the list
+
+  // Dedupe the font list so load times are quicker
   fontList.forEach(font => {
-    fontFamilies.push(font['family'])
-    fontStyles.push(font['style'])
+    if (isFontDupe(font, uniqueFontsToLoad) === false)
+      uniqueFontsToLoad.push(font) // If it's unique, add to uniqueFontsToLoad
   })
 
-  // Get font families
-  let uniqueFontFamilies = [...new Set(fontFamilies)]
-
-  // Get font styles
-  let uniqueFontStyles = [...new Set(fontStyles)]
-
-  // Generate array of uniques
-  uniqueFontFamilies.forEach(family =>
-    uniqueFontStyles.forEach(style =>
-      uniqueFontsToLoad.push(
-        { family: family, style: style }
-      )
-    )
-  )
 
   // Load the fonts
   console.log('Deduped font list:', uniqueFontsToLoad)
-  return uniqueFontsToLoad.forEach(async (font) => await figma.loadFontAsync(font))
+  return fontList.forEach(async (font) => await figma.loadFontAsync(font))
+}
+
+const isFontDupe = (thisFont: FontName, comparisonFontList: FontName[]) => {
+  let isDupe = false // Assume font is NOT a dupe
+  let fontAFamily = thisFont.family
+  let fontAStyle = thisFont.style
+
+  // Compare this font against the list
+  comparisonFontList.forEach(comparisonFont => {
+    let fontBFamily = comparisonFont.family
+    let fontBStyle = comparisonFont.style
+
+    // If font family & style match, this is a dupe
+    if (fontAFamily === fontBFamily && fontAStyle === fontBStyle)
+      isDupe = true
+  })
+
+  return isDupe
 }
