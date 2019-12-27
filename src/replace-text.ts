@@ -19,30 +19,30 @@ import { stringifyDatetime } from './date-time'
 import { formatNode } from './format-text'
 
 export const replaceText = (airtableData: object) => {
-  // console.log(airtableData); // debug
-  const nodes = figma.root.findAll(node => node.type === "TEXT");
+  // console.log(airtableData) // debug
+  const nodes = figma.root.findAll(node => node.type === "TEXT")
 
   nodes.forEach(async (node: TextNode) => {
-    if (!isVar(node.name)) return;
+    if (!isVar(node.name)) return
 
     // console.log(node.name + 'is a variable. Replacing text.')
-    node.autoRename = false;
-    var pageName = getPage(node).name;
+    node.autoRename = false
+    var pageName = getPage(node).name
 
     if (node.hasMissingFont) {
       console.info('Node has missing font. Not replacing:', pageName, '>', node.name)
-      handleMissingFont(node);
-      return;
+      handleMissingFont(node)
+      return
     } else {
       console.info('Replacing text:', pageName, '>', node.name)
-      replaceTheText(node, airtableData);
+      replaceTheText(node, airtableData)
     }
-  });
+  })
 }
 
 function handleMissingFont (node: TextNode) {
-  console.log('There are missing fonts. Not updating ', node.name, '.');
-  amendReportNode(node, 'MISSING_FONT');
+  console.log('There are missing fonts. Not updating ', node.name, '.')
+  amendReportNode(node, 'MISSING_FONT')
 }
 
 const replaceTheText = async (node: TextNode, airtableData: object) => {
@@ -80,19 +80,21 @@ const replaceTheText = async (node: TextNode, airtableData: object) => {
 const reportNodeName = 'copyThat.airtable.sync.report'
 
 export const createReportNode = async () => {
-  const existingNodes = figma.root.findAll(node => node.type === "TEXT" && node.name === reportNodeName) as TextNode[];
-  existingNodes.forEach(node => {
-    node.remove();
-  })
+  const existingNodes = figma.root.findAll(
+    node => node.type === "TEXT" && node.name === reportNodeName
+  ) as TextNode[]
+  existingNodes.forEach(node => node.remove())
 
   // Create the node
-  figma.createText().name = reportNodeName;
+  figma.createText().name = reportNodeName
 
   // Load the font
-  const node = figma.currentPage.findOne(node => node.type === "TEXT" && node.name === reportNodeName) as TextNode;
-  await figma.loadFontAsync(node.fontName as FontName);
+  const node = figma.currentPage.findOne(
+    node => node.type === "TEXT" && node.name === reportNodeName
+  ) as TextNode
+  await figma.loadFontAsync(node.fontName as FontName)
 
-  const dateTime = stringifyDatetime();
+  const dateTime = stringifyDatetime()
 
   // Populate first text
   node.characters = '{{copyThat.airtable}} report — synced '
@@ -100,7 +102,6 @@ export const createReportNode = async () => {
     + ', '
     + dateTime.time
     + '\n===================================\n'
-    ;
 
 }
 
@@ -111,16 +112,18 @@ const amendReportNode = (problematicNode: TextNode, type: 'MISSING_FONT' | 'NOT_
     , NOT_IN_AIRTABLE: 'String wasn\'t found in Airtable.'
   }
 
-  let pageName = getPage(problematicNode).name;
-  let nodeName = problematicNode.name;
-  let msg = msgMap[type];
+  let pageName = getPage(problematicNode).name
+  let nodeName = problematicNode.name
+  let msg = msgMap[type]
 
-  const reportNode = figma.currentPage.findOne(node => node.type === "TEXT" && node.name === reportNodeName) as TextNode;
-  reportNode.characters += '\n' + pageName + ' > ' + nodeName + ' — ' + msg;
+  const reportNode = figma.currentPage.findOne(
+    node => node.type === "TEXT" && node.name === reportNodeName
+  ) as TextNode
+  reportNode.characters += '\n' + pageName + ' > ' + nodeName + ' — ' + msg
 }
 
 const getPage = (node) => {
   // Returns the name of the page where the node is
-  while (node && node.type !== 'PAGE') { node = node.parent; }
-  return node;
+  while (node && node.type !== 'PAGE') { node = node.parent }
+  return node
 }
