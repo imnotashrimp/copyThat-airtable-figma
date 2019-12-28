@@ -45,7 +45,7 @@ export const loadFontList = async(fontList: FontName[]) => {
 
   // Load the fonts
   console.log('Deduped font list:', uniqueFontsToLoad)
-  fontList.forEach(async (font) => await figma.loadFontAsync(font))
+  uniqueFontsToLoad.forEach(async (font) => await figma.loadFontAsync(font))
 }
 
 const isFontDupe = (thisFont: FontName, comparisonFontList: FontName[]) => {
