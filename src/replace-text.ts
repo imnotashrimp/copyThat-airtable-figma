@@ -133,5 +133,5 @@ const getNodeHierarchy = (node) => {
      hierarchy.unshift(node.name) // Add node name to beginning of array
   }
 
-  return `"${hierarchy.join(' ▹ ')}"`
+  return `"${hierarchy.join(' ▸ ')}"`
 }
