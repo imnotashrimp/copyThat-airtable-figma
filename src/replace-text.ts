@@ -18,33 +18,41 @@ import { getVarName, isVar } from './var-test'
 import { stringifyDatetime } from './date-time'
 import { formatNode } from './format-text'
 
-export const replaceText = (airtableData: object) => {
+export const syncStrings = (airtableData: object) => {
   const nodes = figma.root.findAll(node => node.type === "TEXT")
+
   nodes.forEach(async (node: TextNode) => {
     if (!isVar(node.name)) return
 
-    node.autoRename = false // Don't auto-rename node on text change
     let nodeHierarchy = getNodeHierarchy(node)
     console.log(`Working on ${nodeHierarchy}...`)
 
-    if (node.hasMissingFont) {
-      console.log(`Node has missing fonts. Not updating.`)
-      amendReportNode(node, nodeHierarchy, 'MISSING_FONT')
-      return
-    }
+    // If there are missing fonts, fail gracefully and move on.
+    if (handleMissingFont(node, nodeHierarchy) === true) return
+
+    node.autoRename = false // Don't auto-rename node on text change
 
     replaceTheText(node, nodeHierarchy, airtableData)
 
-    console.log('-----------------------')
+    console.log('Done.')
   })
 }
 
-function handleMissingFont (node: TextNode, nodeHierarchy: string) {
-  console.log(`Missing fonts. Not updating ${nodeHierarchy}.`)
-  amendReportNode(node, nodeHierarchy, 'MISSING_FONT')
+const handleMissingFont = (node: TextNode, nodeHierarchy: string) => {
+  if (node.hasMissingFont === true) {
+    console.log(`  Node has missing fonts. Not updating.`)
+    amendReportNode(node, nodeHierarchy, 'MISSING_FONT')
+    return true
+  }
+
+  return false
 }
 
-const replaceTheText = async (node: TextNode, nodeHierarchy: string, airtableData: object) => {
+const replaceTheText = (
+  node: TextNode,
+  nodeHierarchy: string,
+  airtableData: object
+) => {
   console.info(`  Replacing copy...`)
   let str = airtableData[getVarName(node.name)]
 
@@ -56,20 +64,17 @@ const replaceTheText = async (node: TextNode, nodeHierarchy: string, airtableDat
     return
   }
 
-  // Get fontName of first character
-  let firstCharFontName = node.getRangeFontName(0,1) as FontName
-  // Get font family for the node
-  let fontFamily = firstCharFontName.family
-
-  // Apply font to the entire node
-  node.setRangeFontName(0, node.characters.length, firstCharFontName)
+  // Get fontName of first character & apply to the entire node
+  if (node.fontName === figma.mixed)
+    node.fontName = node.getRangeFontName(0,1) as FontName
 
   // Replace the node and apply formatting
   // formatNode(node, str, fontFamily) // TODO debug this
 
-  // Replace the node
   console.info(`  Original: '${node.characters}' , New: '${str}'`)
+  // Replace the node
   node.characters = str
+  // Confirm replacement
   console.info(`  Content replaced. In the node now: '${node.characters}'`)
   return
 }
