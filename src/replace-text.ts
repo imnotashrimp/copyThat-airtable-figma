@@ -19,24 +19,23 @@ import { stringifyDatetime } from './date-time'
 import { formatNode } from './format-text'
 
 export const replaceText = (airtableData: object) => {
-  // console.log(airtableData) // debug
   const nodes = figma.root.findAll(node => node.type === "TEXT")
-
   nodes.forEach(async (node: TextNode) => {
     if (!isVar(node.name)) return
 
-    // console.log(node.name + 'is a variable. Replacing text.')
-    node.autoRename = false
+    node.autoRename = false // Don't auto-rename node on text change
     let nodeHierarchy = getNodeHierarchy(node)
+    console.log(`Working on ${nodeHierarchy}...`)
 
     if (node.hasMissingFont) {
-      console.info(`Node has missing font. Not replacing ${nodeHierarchy}`)
-      handleMissingFont(node, nodeHierarchy)
+      console.log(`Node has missing fonts. Not updating.`)
+      amendReportNode(node, nodeHierarchy, 'MISSING_FONT')
       return
     }
 
-    console.info(`Replacing text in ${nodeHierarchy}`)
     replaceTheText(node, nodeHierarchy, airtableData)
+
+    console.log('-----------------------')
   })
 }
 
@@ -46,7 +45,7 @@ function handleMissingFont (node: TextNode, nodeHierarchy: string) {
 }
 
 const replaceTheText = async (node: TextNode, nodeHierarchy: string, airtableData: object) => {
-  console.info(`  Called replaceTheText for ${nodeHierarchy}.`)
+  console.info(`  Replacing copy...`)
   let str = airtableData[getVarName(node.name)]
 
   // Handle a string that wasn't found in Airtable
@@ -71,7 +70,7 @@ const replaceTheText = async (node: TextNode, nodeHierarchy: string, airtableDat
   // Replace the node
   console.info(`  Original: '${node.characters}' , New: '${str}'`)
   node.characters = str
-  console.info(`  In the node after replace: '${node.characters}'`)
+  console.info(`  Content replaced. In the node now: '${node.characters}'`)
   return
 }
 
@@ -119,7 +118,7 @@ const amendReportNode = (problematicNode: TextNode, nodeHierarchy: string, type:
   const reportNode = figma.currentPage.findOne(
     node => node.type === "TEXT" && node.name === reportNodeName
   ) as TextNode
-  reportNode.characters += `\n ${nodeHierarchy} — ${msg}`
+  reportNode.characters += `\n ${nodeHierarchy}\n     ${msg}`
 }
 
 const getNodeHierarchy = (node) => {
