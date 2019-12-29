@@ -16,7 +16,7 @@
 
 import { getAirtableConfig, setAirtableConfig } from './airtable'
 import { isVar, getVarName } from './var-test'
-import { replaceText, createReportNode } from './replace-text'
+import { syncStrings, createReportNode } from './replace-text'
 import { getNodeFonts, loadFontList } from './fonts'
 
 const airtableConfig = getAirtableConfig();
@@ -64,7 +64,7 @@ figma.ui.onmessage = async (msg) => {
   }
 
   if (msg.type === 'sync-airtable-strings') {
-    replaceText(msg.strings);
+    syncStrings(msg.strings);
   }
 
   if (msg.type === 'error') {
