@@ -18,6 +18,21 @@ import { getVarName, isVar } from './var-test'
 import { stringifyDatetime } from './date-time'
 import { formatNode } from './format-text'
 
+// Given a target node, returns a string of nodes leading to the target node
+const getNodeHierarchy = (node) => {
+  let hierarchy: string[] = [node.name]
+  while (node && node.type !== 'PAGE') {
+     node = node.parent // Move up 1 level
+     hierarchy.unshift(node.name) // Add node name to beginning of array
+  }
+
+  return `"${hierarchy.join(' ▸ ')}"`
+}
+
+/**
+ * EVERYTHING TO DO WITH REPLACING CONTENT
+ */
+
 export const syncStrings = (airtableData: object) => {
   const nodes = figma.root.findAll(node => node.type === "TEXT")
 
@@ -124,14 +139,4 @@ const amendReportNode = (problematicNode: TextNode, nodeHierarchy: string, type:
     node => node.type === "TEXT" && node.name === reportNodeName
   ) as TextNode
   reportNode.characters += `\n ${nodeHierarchy}\n     ${msg}`
-}
-
-const getNodeHierarchy = (node) => {
-  let hierarchy: string[] = [node.name]
-  while (node && node.type !== 'PAGE') {
-     node = node.parent // Move up 1 level
-     hierarchy.unshift(node.name) // Add node name to beginning of array
-  }
-
-  return `"${hierarchy.join(' ▸ ')}"`
 }
