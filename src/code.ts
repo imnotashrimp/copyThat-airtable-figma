@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { getAirtableConfig, setAirtableConfig } from './airtable'
+import { getAirtableConfig, setAirtableConfig } from './airtable/get-set-airtable-config'
 import { isVar, getVarName } from './var-test'
 import { syncStrings, createReportNode } from './replace-text'
 import { getNodeFonts, loadFontList } from './fonts'
