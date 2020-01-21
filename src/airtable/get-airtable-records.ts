@@ -134,11 +134,8 @@ const handleBadResponse = (response) => {
 
   // If it's a bad Base ID, Airtable doesn't return the full object.
   // This will handle that case.
-  if (error === "NOT_FOUND") {
-    errorType = 'BASE_ID_NOT_FOUND'
-  } else {
-    errorType = error.type
-  }
+  errorType =
+    error === 'NOT_FOUND' ? 'BASE_ID_NOT_FOUND' : error.type
 
   const msgPrepend = '⛔️ Sync failed. '
   const msgAppend = ' ⛔️'
