@@ -23,12 +23,8 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
   const theCopyField = airtableConfig.theCopyField
   const filter = makeAirtableFilter(varNames, primaryKeyField)
 
-  const apiBaseUrl = 'https://api.airtable.com/v0/'
-  + baseId
-  + '/'
-  + tableName
-  + '?api_key='
-  + apiKey
+  const apiBaseUrl =
+    `https://api.airtable.com/v0/${baseId}/${tableName}?api_key=${apiKey}`
 
   const addStrings = (records) => {
     // Parses Airtable response fields, generates new object, and appends to
@@ -49,23 +45,26 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
   }
 
   const pageToFetch = (page: 'first' | 'next', offset?: string) => {
+    let url: string = ''
+
     switch(page) {
       case 'first':
-        return apiBaseUrl
-          + '&fields=' + primaryKeyField
-          + '&fields=' + theCopyField
-          + '&filterByFormula=' + filter
+        url =
+          `${apiBaseUrl}&fields=${primaryKeyField}&fields=${theCopyField}&filterByFormula=${filter}`
+        break
 
       case 'next':
-        return apiBaseUrl
-          + '&offset=' + offset
+        url = `${apiBaseUrl}&offset=${offset}`
+        break
     }
+
+    return url
   }
 
   const getResults = async (page: 'first' | 'next', offset?: string) => {
-    var url = pageToFetch(page, offset)
-    var records: string
-    var response = JSON.parse(await makeAirtableCall(url) as string)
+    let url = pageToFetch(page, offset)
+    let records: string
+    let response = JSON.parse(await makeAirtableCall(url) as string)
 
     // If Airtable returned an error, this should kill the plugin and report it
     // to the user
