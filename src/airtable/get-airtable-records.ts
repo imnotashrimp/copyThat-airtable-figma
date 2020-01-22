@@ -34,9 +34,7 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
       var key = record.fields[primaryKeyField]
       var value = record.fields[theCopyField] || '!! STRING IS EMPTY'
 
-      if (!key) {
-        return
-      }
+      if (!key) return
 
       // Update allStrings object, to be sent to the plugin
       allStringsArr.push({[key]: value})
@@ -63,7 +61,6 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
 
   const getResults = async (page: 'first' | 'next', offset?: string) => {
     let url = pageToFetch(page, offset)
-    let records: string
     let response = JSON.parse(await makeAirtableCall(url) as string)
 
     // If Airtable returned an error, this should kill the plugin and report it
@@ -71,20 +68,17 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
     handleBadResponse(response)
 
     // Amend the allStrings object, to be passed back to the plugin
-    records = response.records
-    offset = response.offset
-    // console.log(records); // debug
-    addStrings(records)
+    addStrings(response.records)
 
     // Get next page if it's there
-    if (offset) await getResults('next', offset)
+    if (response.offset) await getResults('next', response.offset)
   }
 
   await getResults('first')
   return allStringsArr as string[]
 }
 
-const makeAirtableFilter = (varNames, primaryKeyField: string) => {
+const makeAirtableFilter = (varNames: string[], primaryKeyField: string) => {
   let filterArr = []
 
   varNames.forEach(element => {
