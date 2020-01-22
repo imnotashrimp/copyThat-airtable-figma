@@ -21,7 +21,7 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
   const tableName = airtableConfig.tableName
   const primaryKeyField = airtableConfig.primaryKeyField
   const theCopyField = airtableConfig.theCopyField
-  const filter = makeAirtableFilter(varNames, primaryKeyField)
+  let filter = filterForKeys(varNames, primaryKeyField)
 
   const apiBaseUrl =
     `https://api.airtable.com/v0/${baseId}/${tableName}?api_key=${apiKey}`
@@ -78,7 +78,7 @@ export const getStringsFromAirtable = async (airtableConfig, varNames) => {
   return allStringsArr as string[]
 }
 
-const makeAirtableFilter = (varNames: string[], primaryKeyField: string) => {
+const filterForKeys = (varNames: string[], primaryKeyField: string) => {
   let filterArr = []
 
   varNames.forEach(element => {
