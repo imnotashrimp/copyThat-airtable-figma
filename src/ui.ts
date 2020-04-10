@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { getStringsFromAirtable } from './airtable'
+import { getStringsFromAirtable } from './airtable/get-airtable-records'
 
 const fieldMap = {
     apiKey: 'api-key'
