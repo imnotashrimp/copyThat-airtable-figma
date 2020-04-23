@@ -1,3 +1,5 @@
+![Jest tests](https://github.com/imnotashrimp/copyThat-airtable-figma/workflows/Jest%20tests/badge.svg)
+
 # {{copyThat.airtable}}, a Figma plugin
 
 Writers rejoice!
