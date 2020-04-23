@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export const stringifyDatetime = () => {
-  let dateTime = new Date();
+export const stringifyDatetime = (specifiedDateTime?: Date) => {
+  let dateTime = specifiedDateTime ? new Date(specifiedDateTime) : new Date();
 
   return {
     date: dateString(dateTime),
