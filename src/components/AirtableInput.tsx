@@ -15,34 +15,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-import './ui.css'
-import { AirtableConfig } from './AirtableConfig'
 
-// declare function require(path: string): any
+export function AirtableInput(props) {
+  let validationClass = `${props.id}-validation`
 
-class App extends React.Component {
-  textbox: HTMLInputElement
-
-  countRef = (element: HTMLInputElement) => {
-    if (element) element.value = '5'
-    this.textbox = element
-  }
-
-  onCreate = () => {
-    const count = parseInt(this.textbox.value, 10)
-    parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
-  }
-
-  onCancel = () => {
-    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-  }
-
-  render() {
-    return <div>
-      <AirtableConfig />
-    </div>
-  }
+  return <div className='configFormField'>
+    <label htmlFor={props.id}>{props.label}</label>
+    <input id={props.id} placeholder={props.placeholder} />
+    <span className='validation' id={validationClass}></span>
+    <span className='caption'>{props.caption}</span>
+  </div>
 }
-
-ReactDOM.render(<App />, document.getElementById('react-page'))
