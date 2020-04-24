@@ -1,0 +1,190 @@
+<!--
+// {{copyThat.airtable}} - Plugin for using Airtable as a CMS for Figma designs
+// Copyright (C) 2019 Stefan (Shalom) Boroda
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!-- style -->
+<style>
+
+  body {
+    font-family: 'Roboto', 'Arial', sans-serif;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 11px;
+  }
+
+  a, a:active, a:visited {
+    color: #18A0FB;
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  ::placeholder {
+    color: rgba(0, 0, 0, 0.3);
+  }
+
+  .info {
+    color:rgba(0, 0, 0, 0.8);
+    font-size: 11px;
+  }
+
+  .validation {
+    color: #F24822;
+  }
+
+  label {
+    line-height: 16px;
+    display: inline-block;
+  }
+
+  input {
+    font-family: 'Roboto Mono', monospace;
+    border: none;
+    border-bottom: 1px solid silver;
+    font-size: 14px;
+    display: inline-block
+  }
+
+  .caption {
+    font-size: 11px;
+    margin-top: 3px;
+    margin-bottom: 15px;
+    display: block;
+    color:rgba(0, 0, 0, 0.6);
+  }
+
+  .form-group {
+    padding-top: 10px;
+    margin-top: 20px;
+  }
+
+  .form-group:not(:first-child) {
+    border-top: 1px solid #F0F0F0;
+  }
+
+  .no-border {
+    border: none;
+  }
+
+  .row {
+    display: flex;
+  }
+
+  button:not(:last-child) {
+    margin-right: 10px;
+  }
+
+  button {
+    border: none;
+    border-radius: 6px;
+    width: 72px;
+    height: 32px;
+
+    font-weight: 500;
+    font-size: 11px;
+  }
+
+  button.primary {
+    background: #18A0FB;
+    color: #ffffff;
+  }
+
+  button.standard {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+  }
+
+  #main-validation-msg {
+    display: block;
+    margin-top: 8px;
+  }
+</style>
+
+<!-- content -->
+<div class="form-group">
+
+  <h1>Airtable credentials</h1>
+  <p>
+    <label for="api-key">Airtable API key</label>
+    <input id="api-key" placeholder="keyhxUJ1JCprehxk2">
+    <span class="validation" id='api-key-validation'></span>
+    <span class="caption">
+      From your Airtable
+      <a href="https://airtable.com/account" target="_blank">account overview</a>.
+    </span>
+  </p>
+  <p>
+    <label for="base-id">Base ID</label>
+    <input id="base-id" placeholder="appQy9RSBxIY61OxM">
+    <span class="validation" id='base-id-validation'></span>
+    <span class="caption">
+      In
+      <a href="https://airtable.com/api" target="_blank">https://airtable.com/api</a>,
+      click the base you want to sync.
+      It's in the URL as
+      <code>https://airtable.com/{BASE_ID}/...</code>
+    </span>
+  </p>
+  <p>
+    <label for="table-name">Table</label>
+    <input id="table-name">
+    <span class="validation" id='table-name-validation'></span>
+    <span class="caption">
+      You assign this name in the base.
+      Go to your base, and copy the tab name.
+    </span>
+  </p>
+</div>
+
+<div class="form-group">
+  <h1>The fields</h1>
+  <p>
+    <label for="primary-key-field">Primary key field</label>
+    <input id="primary-key-field">
+    <span class="validation" id='primary-key-field-validation'></span>
+    <span class="caption">
+      You assign this in the base.
+    </span>
+  </p>
+  <p>
+    <label for="the-copy-field">Field with the copy</label>
+    <input id="the-copy-field">
+    <span class="validation" id='the-copy-field-validation'></span>
+    <span class="caption">
+      You assign this in the base.
+    </span>
+  </p>
+</div>
+
+<div class="form-group no-border">
+  <div class="row">
+    <button class="primary" id="save">Save</button>
+    <button class="standard" id="cancel">Cancel</button>
+    <span>
+      <p class="info">
+        <span id="updated-date"></span>
+      </p>
+    </span>
+  </div>
+  <div>
+    <span class="validation" id="main-validation-msg"></span>
+  </div>
+</div>

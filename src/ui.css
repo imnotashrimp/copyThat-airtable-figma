@@ -1,0 +1,97 @@
+body {
+  font-family: 'Roboto', 'Arial', sans-serif;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 11px;
+}
+
+a, a:active, a:visited {
+  color: #18A0FB;
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 1.25rem;
+  margin: 0;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.info {
+  color:rgba(0, 0, 0, 0.8);
+  font-size: 11px;
+}
+
+.validation {
+  color: #F24822;
+}
+
+label {
+  line-height: 16px;
+  display: inline-block;
+}
+
+input {
+  font-family: 'Roboto Mono', monospace;
+  border: none;
+  border-bottom: 1px solid silver;
+  font-size: 14px;
+  display: inline-block
+}
+
+.caption {
+  font-size: 11px;
+  margin-top: 3px;
+  margin-bottom: 15px;
+  display: block;
+  color:rgba(0, 0, 0, 0.6);
+}
+
+.form-group {
+  padding-top: 10px;
+  margin-top: 20px;
+}
+
+.form-group:not(:first-child) {
+  border-top: 1px solid #F0F0F0;
+}
+
+.no-border {
+  border: none;
+}
+
+.row {
+  display: flex;
+}
+
+button:not(:last-child) {
+  margin-right: 10px;
+}
+
+button {
+  border: none;
+  border-radius: 6px;
+  width: 72px;
+  height: 32px;
+
+  font-weight: 500;
+  font-size: 11px;
+}
+
+button.primary {
+  background: #18A0FB;
+  color: #ffffff;
+}
+
+button.standard {
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+#main-validation-msg {
+  display: block;
+  margin-top: 8px;
+}
