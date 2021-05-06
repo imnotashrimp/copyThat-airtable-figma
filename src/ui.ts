@@ -64,8 +64,7 @@ onmessage = (event) => {
     formFields.lastUpdatedDate['innerHTML'] = getFieldValue(data.lastUpdatedDate)
   }
 
-  if (type === 'sync') {
-    console.log('sync called')
+  if (type === 'sync' || type === 'sync-selected') {
     const getAllStrings = async () => {
 
       let allStringsArr = await getStringsFromAirtable(msg.airtableConfig, msg.varNames)
@@ -75,7 +74,7 @@ onmessage = (event) => {
       // console.log(allStringsObj) // debug
 
       var msgToPlugin = {
-        type: 'sync-airtable-strings',
+        type: type === 'sync' ? 'sync-airtable-strings' : 'sync-airtable-strings-selected',
         strings: allStringsObj
       }
 
@@ -99,8 +98,6 @@ document.getElementById('save').onclick = () => {
   var isValid = validateForm(keys)
   // Prevent saving if form isn't valid
   if (isValid === false) return
-
-  console.log('Sending to plugin: ', keys)
   parent.postMessage({ pluginMessage: { type: 'save-airtable-config', keys } }, '*')
 }
 
