@@ -62,8 +62,15 @@ if (figma.command === 'sync-selected' ) {
     figma.closePlugin();
   }
   else {
-    // Find all text nodes
-    const nodes = (figma.currentPage.selection[0] as ChildrenMixin).findAll(node => node.type === "TEXT");
+    var nodes: SceneNode[] = [];
+    figma.currentPage.selection.forEach(async (node: SceneNode) => {
+      if (node.type === "TEXT") {
+        nodes.push(node);
+      }
+      else {
+        nodes = nodes.concat((node as ChildrenMixin).findAll(node => node.type === "TEXT"));
+      }
+    });
 
     // Delete the old report node (if it's there), and make a new one
     createReportNode();

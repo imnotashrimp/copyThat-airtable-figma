@@ -56,7 +56,15 @@ export const syncStringsSelected = (airtableData: object) => {
     figma.closePlugin();
   }
   else {
-    const nodes = (figma.currentPage.selection[0] as ChildrenMixin).findAll(node => node.type === "TEXT");
+    var nodes: SceneNode[] = [];
+    figma.currentPage.selection.forEach(async (node: SceneNode) => {
+      if (node.type === "TEXT") {
+        nodes.push(node);
+      }
+      else {
+        nodes = nodes.concat((node as ChildrenMixin).findAll(node => node.type === "TEXT"));
+      }
+    });
 
     nodes.forEach(async (node: TextNode) => {
       if (!isVar(node.name)) return
