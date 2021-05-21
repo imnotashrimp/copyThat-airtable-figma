@@ -6,7 +6,7 @@
   "ui": "dist/ui.html",
   "menu": [
     {"name": "Sync all the copy!", "command": "sync"},
-    {"name": "Sync selected node!", "command": "sync-selected"},
+    {"name": "Sync selected copy!", "command": "sync-selected"},
     {"name": "Configure...", "command": "config"}
   ]
 }
