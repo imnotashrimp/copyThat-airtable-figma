@@ -16,7 +16,7 @@
 
 import { getAirtableConfig, setAirtableConfig } from './airtable/get-set-airtable-config'
 import { isVar, getVarName } from './var-test'
-import { syncStrings, createReportNode } from './replace-text'
+import { syncStrings, syncStringsSelected, createReportNode } from './replace-text'
 import { getNodeFonts, loadFontList } from './fonts'
 
 const airtableConfig = getAirtableConfig();
@@ -52,6 +52,45 @@ if (figma.command === 'sync' ) {
   })
 }
 
+if (figma.command === 'sync-selected' ) {
+  // Initialize empty array for Airtable filter
+  let varNames = [];
+  let fontsToLoad: FontName[] = [];
+
+  if (figma.currentPage.selection.length < 1) {
+    figma.notify('Nothing is selected!', { timeout: 10000 })
+    figma.closePlugin();
+  }
+  else {
+    var nodes: SceneNode[] = [];
+    figma.currentPage.selection.forEach(async (node: SceneNode) => {
+      if (node.type === "TEXT") {
+        nodes.push(node);
+      }
+      else {
+        nodes = nodes.concat((node as ChildrenMixin).findAll(node => node.type === "TEXT"));
+      }
+    });
+
+    // Delete the old report node (if it's there), and make a new one
+    createReportNode();
+
+    // If variable is found in node name, add to varNames array
+    nodes.forEach(async (node: TextNode) => {
+      if (!isVar(node.name)) return;
+
+      getNodeFonts(node).forEach((font) => fontsToLoad.push(font))
+      varNames.push(getVarName(node.name));
+    });
+
+    // Continue only after the fonts load
+    Promise.all([loadFontList(fontsToLoad)]).then(() => {
+      figma.showUI(__html__, { visible: false });
+      figma.ui.postMessage({ type: 'sync-selected', airtableConfig, varNames });
+    })
+  }
+}
+
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
@@ -65,6 +104,10 @@ figma.ui.onmessage = async (msg) => {
 
   if (msg.type === 'sync-airtable-strings') {
     syncStrings(msg.strings);
+  }
+
+  if (msg.type === 'sync-airtable-strings-selected') {
+    syncStringsSelected(msg.strings);
   }
 
   if (msg.type === 'error') {
